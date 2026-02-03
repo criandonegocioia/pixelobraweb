@@ -164,7 +164,7 @@ const faqs = [
   },
   {
     question: "Posso modificar partes do meu render?",
-    answer: "Sim. Use a ferramenta Editar para refinar seu render. Você pode descrever o que gostaria de alterar ou desenhar diretamente com o pincel. Você também pode adicionar pessoas dentro do mesmo conjunto de ferramentas.",
+    answer: "Sim. Editamos e renderizamos o seu render. Você pode descrever o que gostaria de alterar ou desenhar. Você também pode adicionar pessoas e objetos no seu trabalho.",
   },
   {
     question: "Como a Pixel Obra beneficia arquitetos?",
