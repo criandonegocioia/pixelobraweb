@@ -641,8 +641,8 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             variants={fadeInUp}
             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
           >
-            Crie Renders Arquitetônicos{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">em Segundos.</span>
+            Tecnologia avançada aplicada ao mercado de arquitetura, construção e design{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">aplicados a projetos imobiliários.</span>
           </motion.h1>
           <motion.p
             variants={fadeInUp}
