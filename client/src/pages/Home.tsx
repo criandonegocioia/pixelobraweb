@@ -157,22 +157,7 @@ const faqs = [
     question: "A Pixel Obra é gratuita?",
     answer: "Você recebe 3 créditos gratuitos ao se cadastrar. Para acesso contínuo, você pode escolher entre nossos planos Light, Standard ou Professional. Saiba mais na nossa página de Assinatura.",
   },
-  {
-    question: "Quantos créditos são necessários por geração?",
-    answer: "A maioria dos renders únicos usa 1 crédito. Modelos Pro usam mais créditos, e renders com definição correspondente à entrada e alta definição também requerem créditos adicionais. Alguns recursos avançados—como ampliação de alto nível (acima de 2×) e animações—podem requerer créditos adicionais.",
-  },
-  {
-    question: "Os créditos acumulam para o próximo mês?",
-    answer: "Sim, créditos não utilizados acumulam para o próximo mês. Ao fazer upgrade, todos os créditos são transferidos. Se você fizer upgrade no meio do ciclo, receberá a diferença de créditos entre os planos. No entanto, se você cancelar a assinatura, os créditos restantes expiram no final do seu período de cobrança.",
-  },
-  {
-    question: "Posso usar a Pixel Obra para projetos comerciais?",
-    answer: "Absolutamente. Os renders e edições da Pixel Obra são licenciados para uso comercial.",
-  },
-  {
-    question: "Posso renderizar esboços à mão livre?",
-    answer: "Sim. A ferramenta Renderizar suporta esboços à mão livre. Basta enviar e converter.",
-  },
+
   {
     question: "Posso renderizar plantas de elevação?",
     answer: "Sim. Plantas de elevação são totalmente suportadas através da ferramenta Renderizar.",
