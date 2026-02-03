@@ -635,7 +635,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             variants={fadeInUp}
             className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
           >
-            Visualização Arquitetônica com IA
+            Melhore o apelo visual dos seus projetos e deixe-os mais atraentes.
           </motion.p>
           <motion.h1
             variants={fadeInUp}
