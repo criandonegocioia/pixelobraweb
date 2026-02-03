@@ -54,8 +54,8 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
-// Logo URL - Nova logo com símbolo PO
-const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663329410379/INTDOuJrAuhXSHXH.png";
+// Logo URL - Logo com fundo transparente
+const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663329410379/pNiKuqDHYkXAjoHj.png";
 
 // WhatsApp number
 const WHATSAPP_NUMBER = "5585997589946";
