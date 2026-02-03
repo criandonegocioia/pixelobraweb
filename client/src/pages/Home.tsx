@@ -816,8 +816,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
             </div>
             {/* Floating badge */}
             <div className="absolute -bottom-4 -left-4 px-4 py-2 rounded-xl" style={glassCardStyle}>
-              <p className="text-xs text-muted-foreground">Tempo de processamento</p>
-              <p className="text-lg font-semibold text-primary">~5 segundos</p>
+              <p className="text-xs text-muted-foreground">Processamento em tempo hábil</p>
+              <p className="text-lg font-semibold text-primary">Compare</p>
             </div>
           </motion.div>
         </div>
