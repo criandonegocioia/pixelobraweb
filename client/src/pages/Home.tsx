@@ -233,26 +233,18 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-// Logo Component - Símbolo + Nome com cores do site
-function Logo({ className = "h-10", showName = true }: { className?: string; showName?: boolean }) {
+// Logo Component - Apenas o símbolo (a logo já contém o nome)
+function Logo({ className = "h-10" }: { className?: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <img 
-        src={LOGO_URL} 
-        alt="Pixel Obra" 
-        className={`${className} w-auto object-contain`}
-        style={{ 
-          filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.3))",
-          maxHeight: "48px"
-        }}
-      />
-      {showName && (
-        <span className="font-bold text-lg md:text-xl tracking-tight">
-          <span className="text-cyan-400">PIXEL</span>
-          <span className="text-amber-400 ml-1">OBRA</span>
-        </span>
-      )}
-    </div>
+    <img 
+      src={LOGO_URL} 
+      alt="Pixel Obra" 
+      className={`${className} w-auto object-contain`}
+      style={{ 
+        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.3))",
+        maxHeight: "48px"
+      }}
+    />
   );
 }
 
@@ -349,7 +341,7 @@ function ContactFormModal({
       <DialogContent className="sm:max-w-lg bg-background/95 backdrop-blur-xl border-white/10">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <Logo className="h-8" showName={false} />
+            <Logo className="h-8" />
             Solicite seu Orçamento
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -549,8 +541,8 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
       <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-b border-white/5" />
       <nav className="container relative flex items-center justify-between h-16 md:h-20">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2 group hover:opacity-90 transition-opacity">
-          <Logo className="h-9 md:h-11" showName={true} />
+        <a href="/" className="flex items-center group hover:opacity-90 transition-opacity">
+          <Logo className="h-10 md:h-12" />
         </a>
 
         {/* Desktop Navigation */}
@@ -1013,8 +1005,8 @@ function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <a href="/" className="flex items-center gap-2 mb-4 hover:opacity-90 transition-opacity">
-              <Logo className="h-9" showName={true} />
+            <a href="/" className="flex items-center mb-4 hover:opacity-90 transition-opacity">
+              <Logo className="h-10" />
             </a>
             <p className="text-sm text-muted-foreground">
               Fornecendo ferramentas e serviços de visualização arquitetônica globalmente.
