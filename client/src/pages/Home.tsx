@@ -154,8 +154,8 @@ const faqs = [
     answer: "A Pixel Obra é uma empresa completa, com ferramentas que transforma esboços arquitetônicos, desenhos de elevação e plantas de fachadas em renderizações fotorrealistas, otimizando seu processo criativo do conceito à saída visual. Também permite implementar sua visão, mobiliar e decorar virtualmente seu espaço, melhorar e ampliar seus renders, modificar seu design e popular suas cenas com personagens realistas.",
   },
   {
-    question: "A Pixel Obra é gratuita?",
-    answer: "Você recebe 3 créditos gratuitos ao se cadastrar. Para acesso contínuo, você pode escolher entre nossos planos Light, Standard ou Professional. Saiba mais na nossa página de Assinatura.",
+    question: "Os produtos da Pixel Obra são caros?",
+    answer: "Acreditamos que a sofisticação do design premium deve ser um diferencial acessível a quem busca se destacar. Temos afinidade com clientes exigentes pois nossa filosofia interna de trabalho é igualmente rigorosa, alinhando estética impecável à inteligência financeira que o seu negócio necessita. Solicite um orçamento para analisar nosso custo-benefício e descubra como a alta qualidade da nossa entrega pode transformar a conexão com o seu público.",
   },
 
   {
