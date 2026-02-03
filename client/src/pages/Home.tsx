@@ -160,7 +160,7 @@ const faqs = [
 
   {
     question: "Posso renderizar plantas de elevação?",
-    answer: "Sim. Plantas de elevação são totalmente suportadas através da ferramenta Renderizar.",
+    answer: "Sim. Plantas de elevação são totalmente Renderizáveis.",
   },
   {
     question: "Posso modificar partes do meu render?",
