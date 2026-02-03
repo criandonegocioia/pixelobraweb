@@ -648,7 +648,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             variants={fadeInUp}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
           >
-            Seu assistente de visualização arquitetônica com inteligência artificial.
+            Especializados na criação célere de renders e animações de alta performance através de Inteligência Artificial.
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Button
