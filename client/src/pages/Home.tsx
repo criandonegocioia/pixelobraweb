@@ -54,8 +54,8 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 
-// Logo URL - Logo com fundo transparente e texto em cinza claro
-const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663329410379/QRkLPVqmVzlCgMxb.png";
+// Logo URL - Logo com fundo transparente, Pixel em cinza claro, cores originais preservadas
+const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663329410379/eJldeziwljcNLwcD.png";
 
 // WhatsApp number
 const WHATSAPP_NUMBER = "5585997589946";
