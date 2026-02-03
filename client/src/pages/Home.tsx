@@ -860,7 +860,7 @@ function FeaturedSection() {
             Gerações em Destaque
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-muted-foreground max-w-2xl mx-auto">
-            Descubra imagens geradas recentemente por nossa comunidade
+            Descubra imagens geradas recentemente por nossa equipe
           </motion.p>
         </motion.div>
 
