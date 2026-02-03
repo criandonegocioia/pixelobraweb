@@ -168,11 +168,11 @@ const faqs = [
   },
   {
     question: "Como a Pixel Obra beneficia arquitetos?",
-    answer: "Ao transformar esboços rápidos em visuais fotorrealistas quase instantaneamente, a Pixel Obra capacita arquitetos a iterar ideias de design e desenvolver apresentações sem precisar de software de renderização.",
+    answer: "Ao transformarmos seus esboços e projetos em visuais fotorrealistas, a Pixel Obra ajuda arquitetos a iterar ideias de design e desenvolver apresentações sem ocupar seu tempo com renderização, liberando a sua criatividade em outros projetos.",
   },
   {
     question: "Como a Pixel Obra apoia corretores imobiliários?",
-    answer: "Profissionais do mercado imobiliário agora podem gerar visualizações polidas, desde renderizações e decoração virtual até animações, sem depender de agências ou contratados externos, tudo em segundos.",
+    answer: "Profissionais do mercado imobiliário agora podem ter visualizações polidas de seus imóveis, desde renderizações e decoração virtual até animações, sem depender de agências ou contratados externos e tornando suas apresentações visualmente atraentes e potencializando vendas.",
   },
 ];
 
