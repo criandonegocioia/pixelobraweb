@@ -151,7 +151,7 @@ const benefits = [
 const faqs = [
   {
     question: "O que é a Pixel Obra?",
-    answer: "A Pixel Obra é uma suíte completa de ferramentas que transforma esboços arquitetônicos, desenhos de elevação e plantas de fachadas em renderizações fotorrealistas em segundos, otimizando seu processo criativo do conceito à saída visual. Também permite visualizar sua visão com um prompt, mobiliar e decorar virtualmente seu espaço, melhorar e ampliar seus renders, modificar seu design e popular suas cenas com personagens realistas.",
+    answer: "A Pixel Obra é uma empresa completa, com ferramentas que transforma esboços arquitetônicos, desenhos de elevação e plantas de fachadas em renderizações fotorrealistas, otimizando seu processo criativo do conceito à saída visual. Também permite implementar sua visão, mobiliar e decorar virtualmente seu espaço, melhorar e ampliar seus renders, modificar seu design e popular suas cenas com personagens realistas.",
   },
   {
     question: "A Pixel Obra é gratuita?",
