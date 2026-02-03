@@ -133,17 +133,17 @@ const benefits = [
   {
     icon: Zap,
     title: "Rápido e Eficiente",
-    description: "Do conceito ao render em segundos.",
+    description: "Do conceito ao render.",
   },
   {
     icon: RefreshCw,
-    title: "Refinamento Fácil",
+    title: "Refinamento Ágil",
     description: "Amplie ou edite imagens de acordo com sua visão.",
   },
   {
     icon: MousePointer,
     title: "Fluxo de Trabalho Integrado",
-    description: "Adicione pessoas com um clique ou anime a partir de uma única imagem.",
+    description: "Adicione pessoas ou anime a partir de uma única imagem.",
   },
 ];
 
@@ -972,7 +972,7 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
             Considere nossos Serviços Empresariais personalizados
           </motion.h2>
           <motion.p variants={fadeInUp} className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Soluções sob medida para escritórios de arquitetura, construtoras e incorporadoras que precisam de volume e personalização.
+            Soluções sob medida para escritórios de arquitetura, construtoras, incorporadoras e corretores que precisam de volume e personalização.
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Button
@@ -981,7 +981,7 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
               onClick={onOpenContact}
             >
-              Falar com Especialista
+              Fale conosco
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
@@ -1009,7 +1009,7 @@ function Footer() {
               <Logo className="h-10" />
             </a>
             <p className="text-sm text-muted-foreground">
-              Fornecendo ferramentas e serviços de visualização arquitetônica globalmente.
+              Fornecendo ferramentas e serviços de visualização arquitetônica nacionalmente.
             </p>
           </div>
 
