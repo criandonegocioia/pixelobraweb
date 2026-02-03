@@ -86,44 +86,44 @@ const languages = [
 const tools = [
   {
     icon: Sparkles,
-    title: "Renderizar",
-    description: "Envie esboços, elevações ou plantas de fachadas e obtenha renders fotorrealistas em segundos.",
+    title: "Renderização",
+    description: "Mande-nos esboços, elevações, plantas baixas em 2D, planta de fachadas ou outra imagem e faremos renders fotorrealistas profissionais.",
     image: IMAGES.render,
   },
   {
     icon: Image,
-    title: "Visualizar",
-    description: "Descreva sua visão com um prompt e receba instantaneamente uma imagem arquitetônica realista.",
+    title: "Visualização",
+    description: "Descreva sua visão sobre uma ideia e receba uma imagem arquitetônica realista.",
     image: IMAGES.interior,
   },
   {
     icon: Sofa,
-    title: "Decorar",
-    description: "Mobilie e decore virtualmente seu espaço com um único clique.",
+    title: "Decoração",
+    description: "Mobilie e decore virtualmente seu espaço.",
     image: IMAGES.staging,
   },
   {
     icon: ZoomIn,
-    title: "Ampliar",
-    description: "Melhore e amplie seus renders com texturas de alta resolução e detalhes refinados.",
+    title: "Ampliação",
+    description: "Melhore, amplie, faça close-ups, ajustes e modificação em seus renders, com formatos e texturas de alta resolução e detalhes refinados.",
     image: IMAGES.exterior,
   },
   {
     icon: Pencil,
-    title: "Editar",
-    description: "Modifique seu design facilmente descrevendo as alterações desejadas ou usando nossa ferramenta de pincel.",
+    title: "Edição",
+    description: "Modifique seu design apenas nos descrevendo as alterações desejadas.",
     image: IMAGES.interior,
   },
   {
     icon: Users,
-    title: "Adicionar Pessoas",
-    description: "Popule suas cenas com personagens realistas com um único clique.",
+    title: "Adicione Pessoa e Objetos",
+    description: "Popule suas cenas com objetos e personagens ultrarrealistas. Inclusive, adicionado você, o cliente ou terceiros interessados na cena.",
     image: IMAGES.exterior,
   },
   {
     icon: Video,
-    title: "Animar",
-    description: "Transforme uma única imagem estática em uma animação de vídeo dinâmica instantaneamente.",
+    title: "Animação e Vídeos",
+    description: "Transforme uma única imagem estática em uma animação de vídeo dinâmica e realista, com contexto e storytelling.",
     image: IMAGES.hero,
   },
 ];
@@ -639,7 +639,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           </motion.p>
           <motion.h1
             variants={fadeInUp}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6" style={{fontSize: '51px'}}
           >
             Tecnologia avançada dedicada ao mercado de arquitetura, construção e design{" "}
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">aplicados a projetos imobiliários.</span>
