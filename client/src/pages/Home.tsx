@@ -626,8 +626,8 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             variants={fadeInUp}
             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6" style={{fontSize: '51px'}}
           >
-            Renders e Animações com{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">Inteligência Artificial</span>
+            Tecnologia avançada dedicada ao mercado de arquitetura, construção e design{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">aplicados a projetos imobiliários.</span>
           </motion.h1>
           <motion.p
             variants={fadeInUp}
