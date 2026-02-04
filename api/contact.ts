@@ -39,7 +39,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
-            to: "pixelobra@gmail.com",
+            to: process.env.EMAIL_USER,
             subject: `URGENTE: Solicitação de Orçamento - ${nome}`,
             text: `
         Nome: ${nome}
