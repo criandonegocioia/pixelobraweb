@@ -35,7 +35,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             tls: {
                 rejectUnauthorized: false // Trust self-signed certs (antivirus bypass)
             }
-        });
+        } as nodemailer.TransportOptions);
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
