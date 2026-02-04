@@ -10,7 +10,6 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Deployment trigger: 2026-02-04 (Force Update)
 async function startServer() {
   const app = express();
   const server = createServer(app);
