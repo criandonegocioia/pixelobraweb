@@ -53,6 +53,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 import { WhatsAppIcon, WHATSAPP_LINK } from "@/components/FloatingWhatsApp";
 
@@ -240,21 +241,8 @@ function ContactFormModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
+  const submitContactMutation = trpc.contact.submit.useMutation({
+    onSuccess: (data) => {
       if (data.success) {
         setIsSuccess(true);
         toast("Solicitação enviada com sucesso!", {
@@ -273,14 +261,24 @@ function ContactFormModal({
           });
         }, 2000);
       } else {
-        throw new Error(data.message || "Erro ao enviar solicitação");
+        toast.error("Erro ao enviar solicitação", {
+          description: data.message,
+        });
       }
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Erro no envio:", error);
-      const errorMessage = error instanceof Error ? error.message : "Houve um problema ao enviar seu pedido.";
       toast.error("Erro ao enviar solicitação", {
-        description: errorMessage,
+        description: error.message || "Houve um problema ao enviar seu pedido.",
       });
+    },
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await submitContactMutation.mutateAsync(formData);
     } finally {
       setIsSubmitting(false);
     }
