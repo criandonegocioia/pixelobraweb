@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Portfolio from "./pages/Portfolio";
+import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <FloatingWhatsApp />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
