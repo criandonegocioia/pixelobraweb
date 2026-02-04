@@ -5,6 +5,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -150,7 +155,74 @@ function vitePluginManusDebugCollector(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector()];
+/**
+ * Vite plugin to handle API requests in development
+ * - POST /api/contact: Sends email
+ */
+function vitePluginEmailBackend(): Plugin {
+  return {
+    name: "email-backend",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use("/api/contact", (req, res, next) => {
+        if (req.method !== "POST") {
+          return next();
+        }
+
+        let body = "";
+        req.on("data", (chunk) => {
+          body += chunk.toString();
+        });
+
+        req.on("end", async () => {
+          try {
+            const { nome, cpfCnpj, email, telefone, descricao } = JSON.parse(body);
+
+            const transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 465,
+              secure: true, // true for 465, false for other ports
+              auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+              },
+              // Force IPv4 to avoid ECONNREFUSED on IPv6
+              family: 4,
+              tls: {
+                rejectUnauthorized: false
+              }
+            } as nodemailer.TransportOptions);
+
+            const mailOptions = {
+              from: process.env.EMAIL_USER,
+              to: "pixelobra@gmail.com",
+              subject: `URGENTE: Solicitação de Orçamento - ${nome}`,
+              text: `
+                Nome: ${nome}
+                CPF/CNPJ: ${cpfCnpj}
+                E-mail: ${email}
+                Telefone: ${telefone}
+                
+                Descrição:
+                ${descricao}
+              `,
+            };
+
+            await transporter.sendMail(mailOptions);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true, message: "Email enviado com sucesso!" }));
+          } catch (error) {
+            console.error("Erro ao enviar email:", error);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            res.writeHead(500, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: false, message: `Erro ao enviar email: ${errorMessage}` }));
+          }
+        });
+      });
+    }
+  };
+}
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginEmailBackend()];
 
 export default defineConfig({
   plugins,

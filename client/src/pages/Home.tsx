@@ -244,36 +244,46 @@ function ContactFormModal({
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    // In production, this would send to a backend that emails pixelobra@gmail.com
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Create mailto link as fallback
-    const subject = encodeURIComponent("Solicitação de Orçamento - Pixel Obra");
-    const body = encodeURIComponent(
-      `Nome: ${formData.nome}\n` +
-      `CPF/CNPJ: ${formData.cpfCnpj}\n` +
-      `E-mail: ${formData.email}\n` +
-      `Telefone: ${formData.telefone}\n\n` +
-      `Descrição da Solicitação:\n${formData.descricao}`
-    );
-
-    window.location.href = `mailto:pixelobra@gmail.com?subject=${subject}&body=${body}`;
-
-    setIsSubmitting(false);
-    setIsSuccess(true);
-
-    setTimeout(() => {
-      setIsSuccess(false);
-      onClose();
-      setFormData({
-        nome: "",
-        cpfCnpj: "",
-        email: "",
-        telefone: "",
-        descricao: "",
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-    }, 2000);
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSuccess(true);
+        toast("Solicitação enviada com sucesso!", {
+          description: "Recebemos seu pedido e entraremos em contato em breve.",
+        });
+
+        setTimeout(() => {
+          setIsSuccess(false);
+          onClose();
+          setFormData({
+            nome: "",
+            cpfCnpj: "",
+            email: "",
+            telefone: "",
+            descricao: "",
+          });
+        }, 2000);
+      } else {
+        throw new Error(data.message || "Erro ao enviar solicitação");
+      }
+    } catch (error) {
+      console.error("Erro no envio:", error);
+      const errorMessage = error instanceof Error ? error.message : "Houve um problema ao enviar seu pedido.";
+      toast.error("Erro ao enviar solicitação", {
+        description: errorMessage,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const formatCpfCnpj = (value: string) => {
