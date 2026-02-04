@@ -29,12 +29,19 @@ async function startServer() {
       const { nome, cpfCnpj, email, telefone, descricao } = req.body;
 
       const transporter = nodemailer.createTransport({
-        service: "gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true, // true for 465, false for other ports
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
-      });
+        // Force IPv4 and bypass SSL for stability
+        family: 4,
+        tls: {
+          rejectUnauthorized: false
+        }
+      } as nodemailer.TransportOptions);
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
@@ -55,7 +62,8 @@ async function startServer() {
       res.json({ success: true, message: "Email enviado com sucesso!" });
     } catch (error) {
       console.error("Erro ao enviar email:", error);
-      res.status(500).json({ success: false, message: "Erro ao enviar email." });
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ success: false, message: `Erro ao enviar email: ${errorMessage}` });
     }
   });
 
