@@ -535,6 +535,9 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
           <button onClick={handleNavClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Soluções
           </button>
+          <a href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Portfólio
+          </a>
           <button onClick={handleNavClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Preços
           </button>
@@ -572,6 +575,9 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
             <button onClick={handleNavClick} className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
               Soluções
             </button>
+            <a href="/portfolio" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+              Portfólio
+            </a>
             <button onClick={handleNavClick} className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
               Preços
             </button>
@@ -1006,6 +1012,11 @@ function Footer() {
                 <button onClick={handleClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Soluções
                 </button>
+              </li>
+              <li>
+                <a href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Portfólio
+                </a>
               </li>
               <li>
                 <button onClick={handleClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
