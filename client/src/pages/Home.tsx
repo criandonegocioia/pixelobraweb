@@ -512,6 +512,9 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
           <a href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Portfólio
           </a>
+          <a href="#sobre-nos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            Sobre Nós
+          </a>
           <button onClick={handleNavClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
             Preços
           </button>
@@ -552,6 +555,9 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
             <a href="/portfolio" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
               Portfólio
             </a>
+            <a href="#sobre-nos" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+              Sobre Nós
+            </a>
             <button onClick={handleNavClick} className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
               Preços
             </button>
@@ -579,11 +585,18 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
-        <img
-          src={IMAGES.hero}
-          alt="Arquitetura moderna"
-          className="w-full h-full object-cover"
-        />
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={{ scale: 1.1 }}
+          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
+          className="w-full h-full"
+        >
+          <img
+            src={IMAGES.hero}
+            alt="Arquitetura moderna"
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
       </div>
@@ -596,25 +609,13 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           variants={staggerContainer}
           className="max-w-4xl mx-auto text-center"
         >
-          <motion.p
-            variants={fadeInUp}
-            className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
-          >
-            Melhore o apelo visual dos seus projetos e deixe-os mais atraentes.
-          </motion.p>
-          <motion.h1
-            variants={fadeInUp}
+
+          <h1
             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6" style={{ fontSize: '51px' }}
           >
-            Tecnologia avançada dedicada ao mercado de arquitetura, construção e design{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">aplicados a projetos imobiliários.</span>
-          </motion.h1>
-          <motion.p
-            variants={fadeInUp}
-            className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
-          >
-            Especializados na criação célere de renders e animações de alta performance através de Inteligência Artificial.
-          </motion.p>
+            A Nova Era da Arquitetura Digital: <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">Renders Inteligentes pela Pixel Obra.</span>
+          </h1>
+
           <motion.div variants={fadeInUp}>
             <Button
               size="lg"
@@ -647,6 +648,30 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
   );
 }
 
+// About Section
+function AboutSection() {
+  return (
+    <section id="sobre-nos" className="py-24 md:py-32 relative overflow-hidden bg-muted/20">
+      <div className="container relative z-10">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="max-w-4xl mx-auto text-center"
+        >
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+            Sobre <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">Nós</span>
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+            "Na Pixel Obra, unimos a precisão da tecnologia de Inteligência Artificial à sensibilidade do design arquitetônico. Buscamos inspiração na fluidez e no minimalismo de ícones como Oscar Niemeyer para criar imagens que não apenas mostram um projeto, mas contam uma história e aceleram a venda de empreendimentos imobiliários."
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // Tools Section
 function ToolsSection() {
   const handleClick = () => {
@@ -666,10 +691,10 @@ function ToolsSection() {
           className="text-center mb-16"
         >
           <motion.p variants={fadeInUp} className="text-primary text-sm font-medium tracking-wider uppercase mb-4">
-            Nossas Ferramentas
+            Visões
           </motion.p>
           <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-bold tracking-tight">
-            Descubra nossas ferramentas
+            Nosso jeito de Ver
           </motion.h2>
         </motion.div>
 
@@ -1113,6 +1138,7 @@ export default function Home() {
         <ToolsSection />
         <BenefitsSection onOpenContact={() => setIsContactOpen(true)} />
         <FeaturedSection />
+        <AboutSection />
         <FAQSection />
         <CTASection onOpenContact={() => setIsContactOpen(true)} />
       </main>

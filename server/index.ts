@@ -23,49 +23,7 @@ async function startServer() {
   app.use(express.static(staticPath));
   app.use(express.json());
 
-  // Email API Route
-  app.post("/api/contact", async (req, res) => {
-    try {
-      const { nome, cpfCnpj, email, telefone, descricao } = req.body;
 
-      const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-        // Force IPv4 and bypass SSL for stability
-        family: 4,
-        tls: {
-          rejectUnauthorized: false
-        }
-      } as nodemailer.TransportOptions);
-
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
-        subject: `URGENTE: Solicitação de Orçamento - ${nome}`,
-        text: `
-          Nome: ${nome}
-          CPF/CNPJ: ${cpfCnpj}
-          E-mail: ${email}
-          Telefone: ${telefone}
-          
-          Descrição:
-          ${descricao}
-        `,
-      };
-
-      await transporter.sendMail(mailOptions);
-      res.json({ success: true, message: "Email enviado com sucesso!" });
-    } catch (error) {
-      console.error("Erro ao enviar email:", error);
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      res.status(500).json({ success: false, message: `Erro ao enviar email: ${errorMessage}` });
-    }
-  });
 
   // Handle client-side routing - serve index.html for all routes
   app.get("*", (_req, res) => {
