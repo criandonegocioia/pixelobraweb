@@ -1,0 +1,20 @@
+{
+    "name": "Pixel Obra",
+    "short_name": "Pixel Obra",
+    "description": "Renderização e Visualização Arquitetônica Digital",
+    "theme_color": "#0F4C5C",
+    "background_color": "#000000",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        }
+    ]
+}

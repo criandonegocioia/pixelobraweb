@@ -133,7 +133,7 @@ export default function Portfolio() {
               Voltar
             </Button>
           </Link>
-          <h1 className="text-xl font-semibold text-foreground">Portfólio</h1>
+          <h1 className="text-xl font-light tracking-tight text-foreground">Portfólio</h1>
           <div className="w-24" /> {/* Spacer para centralizar */}
         </div>
       </header>
@@ -149,16 +149,16 @@ export default function Portfolio() {
           >
             <motion.h2
               variants={fadeInUp}
-              className="text-4xl md:text-5xl font-bold mb-6"
+              className="text-4xl md:text-5xl font-light tracking-tight mb-8"
             >
               Nossos{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
+              <span className="font-normal bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
                 Projetos
               </span>
             </motion.h2>
             <motion.p
               variants={fadeInUp}
-              className="text-lg text-muted-foreground mb-8"
+              className="text-xl md:text-2xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto tracking-wide mb-8"
             >
               Conheça alguns dos trabalhos realizados pela nossa equipe. Cada projeto é único e desenvolvido com atenção aos detalhes para superar as expectativas dos nossos clientes.
             </motion.p>
@@ -223,8 +223,8 @@ export default function Portfolio() {
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                      <p className="text-primary text-sm font-medium mb-1">{project.category}</p>
-                      <h3 className="text-xl font-semibold text-white mb-2">{project.title}</h3>
+                      <p className="text-primary text-[10px] uppercase tracking-widest font-light mb-1">{project.category}</p>
+                      <h3 className="text-xl font-light tracking-tight text-white mb-2">{project.title}</h3>
                       <div className="flex flex-wrap gap-2">
                         {project.tags.map((tag) => (
                           <span
@@ -319,8 +319,8 @@ export default function Portfolio() {
                   className="w-full h-auto max-h-[70vh] object-contain"
                 />
                 <div className="p-6">
-                  <p className="text-primary text-sm font-medium mb-1">{selectedProject.category}</p>
-                  <h3 className="text-2xl font-semibold text-white mb-2">{selectedProject.title}</h3>
+                  <p className="text-primary text-[10px] uppercase tracking-widest font-light mb-1">{selectedProject.category}</p>
+                  <h3 className="text-2xl font-light tracking-tight text-white mb-2">{selectedProject.title}</h3>
                   <p className="text-muted-foreground">{selectedProject.description}</p>
                   <div className="flex flex-wrap gap-2 mt-4">
                     {selectedProject.tags.map((tag) => (

@@ -1,0 +1,19 @@
+# Define que o Git deve tentar detectar automaticamente arquivos de texto
+* text=auto
+
+# Força arquivos de código e configuração a usarem LF (padrão Linux/Mac) no repositório
+# Isso evita o aviso de CRLF que você viu no terminal
+*.js text eol=lf
+*.json text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+
+# Garante que arquivos de design e imagens sejam tratados como binários
+# Isso impede que o Git tente "corrigir" o texto dentro de uma imagem
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ai binary
+*.psd binary

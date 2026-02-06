@@ -239,6 +239,18 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          animations: ["framer-motion"],
+          ui: ["lucide-react", "clsx", "tailwind-merge"],
+          charts: ["recharts"],
+          forms: ["react-hook-form", "zod", "@hookform/resolvers"],
+        },
+      },
+    },
   },
   server: {
     host: true,

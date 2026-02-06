@@ -57,11 +57,8 @@ import { trpc } from "@/lib/trpc";
 
 import { WhatsAppIcon, WHATSAPP_LINK } from "@/components/FloatingWhatsApp";
 
-// Logo URL - Logo com fundo transparente, Pixel em cinza claro, cores originais preservadas
-const LOGO_URL = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663329410379/eJldeziwljcNLwcD.png";
-const INSTAGRAM_URL = "https://instagram.com/pixelobra";
-
 // Image URLs
+const INSTAGRAM_URL = "https://instagram.com/pixelobra";
 const IMAGES = {
   hero: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-1_1770149361000_na1fn_cGl4ZWwtb2JyYS1oZXJv.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTFfMTc3MDE0OTM2MTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFvWlhKdi5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=JSfFUUWkQqYSN8HNEhCgAF9zFjlwCCyvh~8yqreP0jEwd2ISnAwLx716gYkes3kJ32EZVTKJiciUZzGuwmRvm619hiF~29RMiLxBgnH~7UgdSmylx49qvIjeNLUfMG4fylxRvwb1zGgLhqQ~wvtPoHsZ4vM9tLnv1TxTr0D2lM1I-bHTSE9yDTMFnf4hxM4TAAhzDty5-k~jjwlqgFM8TwIzb6AJIhTjaKvtxk-n8Z5S~o8Xp1TrO8WnAnTRgswYSCiw9uj2gMRdtfqnJi-jkmLWvsP6Pz0YYdh4ScKBru~jwJxkBwFltEf-sXM-HKFQckzGY1b~~EITwb9vZqzUlw__",
   render: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-2_1770149359000_na1fn_cGl4ZWwtb2JyYS1yZW5kZXI.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTJfMTc3MDE0OTM1OTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzF5Wlc1a1pYSS5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=igYIie1Mki1lfHujraWaVMuqFToZ9otNKsmX7y78EXHKaK6T7YOsuL7071S83MVW0t~aV5oXsxGo91R-MonQl6wdzQM6VWn9MZpr05jzS7HJX1lFW3snJvUiIEPtetp499vbKYJGaMy3rh4apouwdm6gtqTGHsnz~ajtgclgBd5VVXcSocD6AFo2b7BgHFWBIdySySxy~4GT6fHZs46taYy8oRC3G42rp3xSt8mChpRML0bULSCkIoyHLFMKoVreGdOmj8iftdPchntg4ywswNbqoNq1qikIm6I-ii5q~maqJdgWcsrdj0Aqm9VhpJ2-XmdxAsnUBCBqKEWSVHrrJw__",
@@ -198,28 +195,26 @@ const staggerContainer = {
 
 // Glass card styles as inline styles
 const glassCardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.05)",
-  backdropFilter: "blur(24px)",
-  WebkitBackdropFilter: "blur(24px)",
-  border: "1px solid rgba(255, 255, 255, 0.1)",
-  borderRadius: "0.75rem",
-  boxShadow: "0 4px 24px -1px rgba(0, 0, 0, 0.2), inset 0 0 1px 0 rgba(255, 255, 255, 0.1)",
+  background: "rgba(255, 255, 255, 0.03)",
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  border: "1px solid rgba(255, 255, 255, 0.08)",
+  borderRadius: "0.5rem",
+  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
 };
 
 
 
-// Logo Component - Apenas o símbolo (a logo já contém o nome)
+// Logo Component with new "PO" and Text
 function Logo({ className = "h-10" }: { className?: string }) {
   return (
-    <img
-      src={LOGO_URL}
-      alt="Pixel Obra"
-      className={`${className} w-auto object-contain`}
-      style={{
-        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.3))",
-        maxHeight: "48px"
-      }}
-    />
+    <div className={`flex items-center gap-3 ${className}`}>
+      <img
+        src="/logo.jpg?v=3"
+        alt="Pixel Obra"
+        className="h-full w-auto object-contain rounded-xl"
+      />
+    </div>
   );
 }
 
@@ -485,7 +480,7 @@ function LanguageSelector() {
   );
 }
 
-// Header Component
+// Header Component - Redesigned (Floating Pill)
 function Header({ onOpenContact }: { onOpenContact: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -496,86 +491,96 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-b border-white/5" />
-      <nav className="container relative flex items-center justify-between h-16 md:h-20">
-        {/* Logo */}
-        <a href="/" className="flex items-center group hover:opacity-90 transition-opacity">
-          <Logo className="h-10 md:h-12" />
-        </a>
+    <>
+      <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        {/* Floating Pill Container */}
+        <nav className="relative flex items-center justify-between h-14 md:h-16 px-6 bg-background/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl max-w-5xl w-full">
 
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          <button onClick={handleNavClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Soluções
-          </button>
-          <a href="/portfolio" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Portfólio
+          {/* Logo (Left) */}
+          <a href="/" className="flex items-center group hover:opacity-90 transition-opacity mr-auto">
+            <Logo className="h-8 md:h-10" />
           </a>
-          <a href="#sobre-nos" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Sobre Nós
-          </a>
-          <button onClick={handleNavClick} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            Preços
-          </button>
-        </div>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <LanguageSelector />
-          <Button variant="ghost" size="sm" onClick={handleNavClick}>
-            Entrar
-          </Button>
-          <Button size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={onOpenContact}>
-            Solicite seu Orçamento
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden p-2 -mr-2"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/5"
-        >
-          <div className="container py-4 flex flex-col gap-4">
-            <button onClick={handleNavClick} className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+          {/* Desktop Navigation (Center) */}
+          <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+            <button onClick={handleNavClick} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Soluções
             </button>
-            <a href="/portfolio" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+            <a href="/portfolio" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Portfólio
             </a>
-            <a href="#sobre-nos" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+            <a href="#sobre-nos" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Sobre Nós
             </a>
-            <button onClick={handleNavClick} className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={handleNavClick} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Preços
             </button>
-            <div className="py-2">
-              <LanguageSelector />
-            </div>
-            <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
-              <Button variant="ghost" className="justify-start" onClick={handleNavClick}>
+            <LanguageSelector />
+          </div>
+
+          {/* Desktop CTA (Right) */}
+          <div className="hidden md:flex items-center gap-4 ml-auto">
+            <Button variant="ghost" size="sm" onClick={handleNavClick} className="text-white/70 hover:text-white">
+              Entrar
+            </Button>
+            <Button
+              size="sm"
+              className="bg-transparent border border-cyan-400 text-white hover:bg-cyan-400/10 font-medium rounded-full px-6 shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_25px_rgba(34,211,238,0.5)] transition-all duration-300"
+              onClick={onOpenContact}
+            >
+              Solicite seu Orçamento
+            </Button>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-4 md:hidden ml-auto">
+            <LanguageSelector />
+            <button
+              className="p-2 -mr-2 text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-x-4 top-24 z-40 bg-background/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl md:hidden overflow-hidden"
+          >
+            <div className="p-6 flex flex-col gap-4">
+              <button onClick={handleNavClick} className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
+                Soluções
+              </button>
+              <a href="/portfolio" className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
+                Portfólio
+              </a>
+              <a href="#sobre-nos" className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
+                Sobre Nós
+              </a>
+              <button onClick={handleNavClick} className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
+                Preços
+              </button>
+
+              <div className="h-px bg-white/10 my-2" />
+
+              <Button variant="ghost" className="justify-start text-white/80" onClick={handleNavClick}>
                 Entrar
               </Button>
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={onOpenContact}>
+              <Button className="w-full bg-primary hover:bg-primary/90 text-white font-medium rounded-full py-6" onClick={onOpenContact}>
                 Solicite seu Orçamento
               </Button>
             </div>
-          </div>
-        </motion.div>
-      )}
-    </header>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
@@ -583,22 +588,89 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
 function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
+      {/* SVG Filters Definition for Edge Detection */}
+      <svg className="hidden">
+        <defs>
+          <filter id="edge-detection">
+            {/* Desaturate */}
+            <feColorMatrix type="saturate" values="0" />
+            {/* Edge Detection (finding transitions) */}
+            <feConvolveMatrix
+              order="3,3"
+              kernelMatrix="-1 -1 -1
+                            -1  8 -1
+                            -1 -1 -1"
+              divisor="1"
+              bias="0"
+              preserveAlpha="true"
+            />
+            {/* Invert colors to simulate blueprint/white-lines-on-dark */}
+            <feColorMatrix type="matrix" values="-1 0 0 0 1
+                                                  0 -1 0 0 1
+                                                  0 0 -1 0 1
+                                                  0 0 0 1 0" />
+          </filter>
+        </defs>
+      </svg>
+
+      {/* Background Image - Cinematic & Clean */}
+      <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
+
+        {/* Container for the Zoom Animation - Applies to ALL layers to ensure perfect sync */}
         <motion.div
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.1 }}
-          transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
-          className="w-full h-full"
+          className="absolute inset-0 w-full h-full"
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1.0 }}
+          transition={{
+            duration: 14,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse",
+            repeatDelay: 1.0
+          }}
         >
-          <img
-            src={IMAGES.hero}
-            alt="Arquitetura moderna"
-            className="w-full h-full object-cover"
-          />
+          {/* Layer 1: Clay/Plaster Base (SketchUp Flat Look) - High Brightness/Low Contrast to wash out textures */}
+          <div className="absolute inset-0">
+            <img
+              src="/hero_render.jpg"
+              alt="Base Clay"
+              className="w-full h-full object-cover filter grayscale brightness-[1.3] contrast-[0.6]"
+            />
+          </div>
+
+          {/* Layer 2: Edges/Lines (Overlay) - Stronger edges */}
+          <div className="absolute inset-0 mix-blend-multiply opacity-80">
+            <img
+              src="/hero_render.jpg"
+              alt="Edges"
+              className="w-full h-full object-cover"
+              style={{ filter: "url(#edge-detection)" }}
+            />
+          </div>
+
+          {/* Layer 3: Realistic Render (Fade In) - Delayed start to show SketchUp first */}
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              duration: 12,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "reverse",
+              repeatDelay: 1.0
+            }}
+          >
+            <img
+              src="/hero_render.jpg"
+              alt="Render Realista"
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
+
+        {/* Subtle Vignette - Static on top */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,oklch(0.1_0_0)_100%)] z-20 pointer-events-none" />
       </div>
 
       {/* Content */}
@@ -607,19 +679,24 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
-          className="max-w-4xl mx-auto text-center"
+          className="max-w-5xl mx-auto text-center"
         >
 
           <h1
-            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6" style={{ fontSize: '51px' }}
+            className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tighter mb-8 text-white leading-[1.1]"
           >
-            A Nova Era da Arquitetura Digital: <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">Renders Inteligentes pela Pixel Obra.</span>
+            Tecnologia e Precisão em Projetos para <br className="hidden md:block" />
+            <span className="font-normal">Arquitetura, Construção Civil e Imobiliários</span>
           </h1>
+
+          <p className="text-xl md:text-2xl text-white/50 font-light mb-10 max-w-2xl mx-auto tracking-wide">
+            Renders inteligentes e imersivos pela Pixel Obra.
+          </p>
 
           <motion.div variants={fadeInUp}>
             <Button
               size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg relative overflow-hidden"
+              className="bg-white text-black hover:bg-white/90 rounded-full px-10 py-7 text-lg font-medium tracking-wide transition-all duration-300 hover:scale-105"
               onClick={onOpenContact}
             >
               Solicite seu Orçamento
@@ -628,22 +705,6 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
-          <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1.5 h-1.5 rounded-full bg-primary"
-          />
-        </div>
-      </motion.div>
     </section>
   );
 }
@@ -651,7 +712,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
 // About Section
 function AboutSection() {
   return (
-    <section id="sobre-nos" className="py-24 md:py-32 relative overflow-hidden bg-muted/20">
+    <section id="sobre-nos" className="py-32 relative overflow-hidden bg-black/40">
       <div className="container relative z-10">
         <motion.div
           initial="hidden"
@@ -660,15 +721,15 @@ function AboutSection() {
           variants={fadeInUp}
           className="max-w-4xl mx-auto text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-            Sobre <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">Nós</span>
+          <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 text-white">
+            Sobre <span className="font-normal">Nós</span>
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-            "Na Pixel Obra, unimos a precisão da tecnologia de Inteligência Artificial à sensibilidade do design arquitetônico. Buscamos inspiração na fluidez e no minimalismo de ícones como Oscar Niemeyer para criar imagens que não apenas mostram um projeto, mas contam uma história e aceleram a venda de empreendimentos imobiliários."
+          <p className="text-xl md:text-2xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto tracking-wide">
+            "A Pixel Obra é uma plataforma dedicada à convergência entre arquitetura, construção e design, aplicando soluções digitais de alta precisão em projetos imobiliários. Unimos a exatidão do pixel à solidez da obra para transformar o mercado de engenharia e design."
           </p>
         </motion.div>
       </div>
-    </section>
+    </section >
   );
 }
 
@@ -681,20 +742,20 @@ function ToolsSection() {
   };
 
   return (
-    <section className="py-24 md:py-32 relative">
+    <section className="py-32 relative">
       <div className="container">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <motion.p variants={fadeInUp} className="text-primary text-sm font-medium tracking-wider uppercase mb-4">
+          <motion.p variants={fadeInUp} className="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">
             Visões
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-bold tracking-tight">
-            Nosso jeito de Ver
+          <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-light tracking-tight text-white">
+            Nosso jeito de <span className="font-normal text-white">Ver</span>
           </motion.h2>
         </motion.div>
 
@@ -703,44 +764,47 @@ function ToolsSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]"
         >
-          {tools.map((tool) => (
+          {tools.map((tool, index) => (
             <motion.div
               key={tool.title}
               variants={fadeInUp}
-              className="group overflow-hidden transition-all duration-300 hover:border-white/20"
-              style={glassCardStyle}
+              className={`group relative overflow-hidden rounded-lg border border-white/10 bg-black/20 ${index === 0 || index === 3 ? "md:col-span-2" : ""
+                }`}
             >
-              <div className="aspect-video relative overflow-hidden">
+              {/* Image Background */}
+              <div className="absolute inset-0">
                 <img
                   src={tool.image}
                   alt={tool.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-40"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-lg bg-primary/20 backdrop-blur-sm flex items-center justify-center">
-                      <tool.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold">{tool.title}</h3>
-                  </div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
               </div>
-              <div className="p-5">
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                  {tool.description}
-                </p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-primary hover:text-primary/80 p-0 h-auto"
-                  onClick={handleClick}
-                >
-                  Visualizar
-                  <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
+
+              {/* Content Overlay */}
+              <div className="absolute inset-0 flex flex-col justify-end p-8 transition-all duration-500">
+                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <div className="flex items-center gap-3 mb-3 opacity-80 group-hover:opacity-100">
+                    <div className="p-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                      <tool.icon className="w-4 h-4 text-white" />
+                    </div>
+                    <h3 className="text-xl font-medium text-white tracking-wide">{tool.title}</h3>
+                  </div>
+
+                  <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                    {tool.description}
+                  </p>
+
+                  <Button
+                    variant="link"
+                    className="text-white/80 hover:text-white p-0 h-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200"
+                    onClick={handleClick}
+                  >
+                    Explorar <ChevronRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -753,19 +817,19 @@ function ToolsSection() {
 // Benefits Section
 function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
   return (
-    <section className="py-24 md:py-32 relative overflow-hidden">
+    <section className="py-32 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <img
           src={IMAGES.exterior}
           alt="Arquitetura"
-          className="w-full h-full object-cover opacity-20"
+          className="w-full h-full object-cover opacity-10 grayscale"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background" />
       </div>
 
-      <div className="container relative">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="container relative z-10">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <motion.div
             initial="hidden"
@@ -773,20 +837,20 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
             viewport={{ once: true }}
             variants={staggerContainer}
           >
-            <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-              A Pixel Obra é a forma mais fácil de criar{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">renderizações arquitetônicas.</span>
+            <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-light tracking-tight mb-12 text-white leading-tight">
+              A forma mais fácil de criar <br />
+              <span className="font-normal">renderizações arquitetônicas.</span>
             </motion.h2>
 
-            <motion.div variants={fadeInUp} className="space-y-6 mb-8">
+            <motion.div variants={fadeInUp} className="space-y-8 mb-12">
               {benefits.map((benefit) => (
-                <div key={benefit.title} className="flex gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <benefit.icon className="w-6 h-6 text-primary" />
+                <div key={benefit.title} className="flex gap-6 group">
+                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
+                    <benefit.icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">{benefit.title}</h3>
-                    <p className="text-muted-foreground text-sm">{benefit.description}</p>
+                    <h3 className="text-xl font-medium mb-2 text-white">{benefit.title}</h3>
+                    <p className="text-white/60 text-base font-light">{benefit.description}</p>
                   </div>
                 </div>
               ))}
@@ -795,7 +859,7 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
             <motion.div variants={fadeInUp}>
               <Button
                 size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="bg-white text-black hover:bg-white/90 rounded-full px-8 py-6 text-lg font-medium tracking-wide"
                 onClick={onOpenContact}
               >
                 Solicite seu Orçamento
