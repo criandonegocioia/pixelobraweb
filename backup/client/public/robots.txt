@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://pixelobra.com.br/sitemap.xml

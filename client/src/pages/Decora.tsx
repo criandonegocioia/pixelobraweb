@@ -21,7 +21,7 @@ import PhoneMockup from "@/components/PhoneMockup";
 
 // Imagens do portfólio (usando as imagens já geradas)
 const IMAGES = {
-    ideia1: "/images/decora/ideia1.jpg",
+    ideia1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia1_6a74334a.jpg",
     ideia2: "/images/decora/ideia2.jpg",
     ideia3: "/images/decora/ideia3.jpg",
     projeto1: "/images/decora/projeto1.jpg",
