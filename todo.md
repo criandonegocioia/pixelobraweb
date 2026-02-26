@@ -31,3 +31,4 @@
 - [ ] Implementar sistema de autenticação de usuários
 - [ ] Adicionar painel administrativo para gerenciar solicitações
 - [ ] Implementar tradução completa para outros idiomas
+- [x] Corrigir erro exibido no overlay do Vite (1 error) na página inicial - âncoras aninhadas em Link

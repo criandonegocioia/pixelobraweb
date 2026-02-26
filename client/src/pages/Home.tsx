@@ -217,10 +217,8 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
-          <Link href="/solucoes">
-            <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link href="/solucoes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               {t.solutions}
-            </a>
           </Link>
           <a
             href="/portfolio"
@@ -274,10 +272,8 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
           className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/5"
         >
           <div className="container py-4 flex flex-col gap-4">
-            <Link href="/solucoes">
-              <a className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors block">
+            <Link href="/solucoes" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors block">
                 {t.solutions}
-              </a>
             </Link>
             <a
               href="/portfolio"
@@ -975,10 +971,8 @@ function Footer({ onOpenContact }: { onOpenContact?: () => void }) {
             <h4 className="font-semibold mb-4">{t.resources}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/solucoes">
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/solucoes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {t.links.solutions}
-                  </a>
                 </Link>
               </li>
               <li>
@@ -1011,31 +1005,23 @@ function Footer({ onOpenContact }: { onOpenContact?: () => void }) {
             <h4 className="font-semibold mb-4">{t.company}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/aviso-legal">
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/aviso-legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {t.links.legal}
-                  </a>
                 </Link>
               </li>
               <li>
-                <Link href="/politica-privacidade">
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/politica-privacidade" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {t.links.privacy}
-                  </a>
                 </Link>
               </li>
               <li>
-                <Link href="/termos-de-servico">
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/termos-de-servico" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {t.links.terms}
-                  </a>
                 </Link>
               </li>
               <li>
-                <Link href="/politica-de-cookies">
-                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/politica-de-cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                     {t.links.cookies}
-                  </a>
                 </Link>
               </li>
             </ul>
