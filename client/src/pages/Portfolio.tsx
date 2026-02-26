@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, X, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import {
+  ArrowLeft,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+} from "lucide-react";
 import { Link } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/i18n/translations";
+import ContactFormModal from "@/components/ContactFormModal";
 
 /**
  * Portfolio Page - Galeria de Projetos da Pixel Obra
@@ -11,67 +20,39 @@ import { Link } from "wouter";
 
 // Imagens do portfólio (usando as imagens já geradas)
 const PORTFOLIO_IMAGES = {
-  hero: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-1_1770149361000_na1fn_cGl4ZWwtb2JyYS1oZXJv.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTFfMTc3MDE0OTM2MTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFvWlhKdi5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=JSfFUUWkQqYSN8HNEhCgAF9zFjlwCCyvh~8yqreP0jEwd2ISnAwLx716gYkes3kJ32EZVTKJiciUZzGuwmRvm619hiF~29RMiLxBgnH~7UgdSmylx49qvIjeNLUfMG4fylxRvwb1zGgLhqQ~wvtPoHsZ4vM9tLnv1TxTr0D2lM1I-bHTSE9yDTMFnf4hxM4TAAhzDty5-k~jjwlqgFM8TwIzb6AJIhTjaKvtxk-n8Z5S~o8Xp1TrO8WnAnTRgswYSCiw9uj2gMRdtfqnJi-jkmLWvsP6Pz0YYdh4ScKBru~jwJxkBwFltEf-sXM-HKFQckzGY1b~~EITwb9vZqzUlw__",
-  render: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-2_1770149359000_na1fn_cGl4ZWwtb2JyYS1yZW5kZXI.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTJfMTc3MDE0OTM1OTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzF5Wlc1a1pYSS5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=igYIie1Mki1lfHujraWaVMuqFToZ9otNKsmX7y78EXHKaK6T7YOsuL7071S83MVW0t~aV5oXsxGo91R-MonQl6wdzQM6VWn9MZpr05jzS7HJX1lFW3snJvUiIEPtetp499vbKYJGaMy3rh4apouwdm6gtqTGHsnz~ajtgclgBd5VVXcSocD6AFo2b7BgHFWBIdySySxy~4GT6fHZs46taYy8oRC3G42rp3xSt8mChpRML0bULSCkIoyHLFMKoVreGdOmj8iftdPchntg4ywswNbqoNq1qikIm6I-ii5q~maqJdgWcsrdj0Aqm9VhpJ2-XmdxAsnUBCBqKEWSVHrrJw__",
-  interior: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-3_1770149364000_na1fn_cGl4ZWwtb2JyYS1pbnRlcmlvcg.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTNfMTc3MDE0OTM2NDAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFwYm5SbGNtbHZjZy5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=niCvEmC4ZYyUgc6zZ011KnjXDNMCzB5DRQlcpzFIYcNpD-YnYSAa1TVMiywTUEV0vL9QyNj3QTxGuFQo80ZXAnECo0XEtXauE8EY7rHkCBpBQmomY4a9KLaRDn4zsJuXu8Hp2I4M4bMhRtMfIeFNrUVoMXAUJxokb-8RMljgweMhJhan-H6itPISa3RAaatqgTAMDA~mSTkcU-jsxff8H0NToeg~E1hgdmCQG~HRUhJMY27jYmssA3i9Z4~UdwpB~LpV1ADaVAor5oUaAGmGs70oE2SeKozsbi6kbgheyNOzmuS4GFSRPx8fG5QxmqEDHcmJd4El1WbjZlzpsZnxgQ__",
-  staging: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-4_1770149355000_na1fn_cGl4ZWwtb2JyYS1zdGFnaW5n.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTRfMTc3MDE0OTM1NTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzF6ZEdGbmFXNW4uanBnP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=f3ym95ajTuJbSSZNTgCqiWt2dbT6IYnSrdbWR7Wkxrw~9pIgCuhfhJJsNHYnbLXXtIo3w8Pu9wy4rQUraAbYPvSy1usLMYa0MlzUWen3o0VjJKXXSG25y2ARuK~I3weuECA8ANgbod-XEk9nGlSBln9T8JU62PYAUNSFeeoK50vMLkwq4crgiDruIZWL75~JQIjX-VQa1ZO1WHT9nC9gEIa0~8-AHME9G0BAt6p~C330EMOcxWUqWW7hsEam4Cvf6QJQOYvEvYDAaj6okReXBe2qWreq98jnZLUxeuKEmx3aga05-O73ZorXLbZfZ7R2urwJQ7C6Wpl9EScpodPV7Q__",
-  exterior: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-5_1770149361000_na1fn_cGl4ZWwtb2JyYS1leHRlcmlvcg.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTVfMTc3MDE0OTM2MTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFsZUhSbGNtbHZjZy5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=GjUr0lHC-4RLhB9K1P41M5GPTthJPQyzWa3l0OZ36D0URqHpGlXu-t-ImEkEnLIilqZZVrjJIjWgtq7JjA2tcA722soHLgaZ7Mxn6N2Bl51R8fY9Z8Rnwn-LhYa4xBJsHwh-WCnjIcGFQQMCEkpVIosNzUAol9pYSGqXGfooiFnEAtXYi~z6e-m1lxLiDWedFbrzlFGI~HF6R9xofWihsDnzoWQaswvp-I3Bqdr5urMJ4NAJO2MlibtmJgJ~Yhig1mTSEbrXJdVTH2BcaV~lsgurMUDVCCQmJqCSkPPPYB6cc4VUdK4ZXCHGmbEBjIYqb3VL12jsIpTRS~1ziIH2wg__",
+  casa1: "/images/portfolio/casa1.jpg",
+  casa2: "/images/portfolio/casa2.jpg",
+  casa3: "/images/portfolio/casa3.jpg",
+  casa4: "/images/portfolio/casa4.jpg",
+  hall1: "/images/portfolio/hall1.jpg",
+  loteamento1: "/images/portfolio/loteamento1.jpg",
+  predio1: "/images/portfolio/predio1.jpg",
+  predio2: "/images/portfolio/predio2.jpg",
+  predio3: "/images/portfolio/predio3.jpg",
+  quarto1: "/images/portfolio/quarto1.jpg",
+  sala1: "/images/portfolio/sala1.jpg",
+  sala2: "/images/portfolio/sala2.jpg",
+  sala3: "/images/portfolio/sala3.jpg",
+  sala4: "/images/portfolio/sala4.jpg",
 };
 
-// Projetos do portfólio
-const projects = [
-  {
-    id: 1,
-    title: "Residência Moderna",
-    category: "Renderização Exterior",
-    description: "Projeto residencial de alto padrão com fachada em vidro e madeira. Renderização fotorrealista destacando a integração com a paisagem.",
-    image: PORTFOLIO_IMAGES.hero,
-    tags: ["Residencial", "Exterior", "Moderno"],
-  },
-  {
-    id: 2,
-    title: "Apartamento Conceito",
-    category: "Design de Interiores",
-    description: "Visualização de apartamento com conceito aberto, integrando sala, cozinha e varanda gourmet.",
-    image: PORTFOLIO_IMAGES.interior,
-    tags: ["Apartamento", "Interior", "Contemporâneo"],
-  },
-  {
-    id: 3,
-    title: "Villa Mediterrânea",
-    category: "Renderização Exterior",
-    description: "Projeto de villa com inspiração mediterrânea, piscina infinita e vista panorâmica.",
-    image: PORTFOLIO_IMAGES.render,
-    tags: ["Villa", "Exterior", "Luxo"],
-  },
-  {
-    id: 4,
-    title: "Loft Industrial",
-    category: "Decoração Virtual",
-    description: "Staging virtual de loft com estilo industrial, mobiliário contemporâneo e iluminação natural.",
-    image: PORTFOLIO_IMAGES.staging,
-    tags: ["Loft", "Staging", "Industrial"],
-  },
-  {
-    id: 5,
-    title: "Edifício Corporativo",
-    category: "Renderização Exterior",
-    description: "Fachada de edifício comercial com design sustentável e certificação LEED.",
-    image: PORTFOLIO_IMAGES.exterior,
-    tags: ["Comercial", "Exterior", "Sustentável"],
-  },
-  {
-    id: 6,
-    title: "Casa de Praia",
-    category: "Renderização Exterior",
-    description: "Residência de veraneio com arquitetura tropical, integração indoor-outdoor e materiais naturais.",
-    image: PORTFOLIO_IMAGES.hero,
-    tags: ["Residencial", "Praia", "Tropical"],
-  },
-];
-
-// Categorias para filtro
-const categories = ["Todos", "Renderização Exterior", "Design de Interiores", "Decoração Virtual"];
+// Map IDs to specific images since translation file doesn't import them
+const PROJECT_IMAGES: Record<number, string> = {
+  1: PORTFOLIO_IMAGES.casa1,
+  2: PORTFOLIO_IMAGES.casa2,
+  3: PORTFOLIO_IMAGES.casa3,
+  4: PORTFOLIO_IMAGES.casa4,
+  5: PORTFOLIO_IMAGES.hall1,
+  6: PORTFOLIO_IMAGES.loteamento1,
+  7: PORTFOLIO_IMAGES.predio1,
+  8: PORTFOLIO_IMAGES.predio2,
+  9: PORTFOLIO_IMAGES.predio3,
+  10: PORTFOLIO_IMAGES.quarto1,
+  11: PORTFOLIO_IMAGES.sala1,
+  12: PORTFOLIO_IMAGES.sala2,
+  13: PORTFOLIO_IMAGES.sala3,
+  14: PORTFOLIO_IMAGES.sala4,
+};
 
 // Animações
 const fadeInUp = {
@@ -95,15 +76,42 @@ const glassCardStyle = {
 };
 
 export default function Portfolio() {
-  const [selectedCategory, setSelectedCategory] = useState("Todos");
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null);
+  const { language } = useLanguage();
+  const t = translations[language].portfolio;
+
+  // Get projects from translations and map images to them
+  const projects = t.projects.map(p => ({
+    ...p,
+    image: PROJECT_IMAGES[p.id],
+  }));
+
+  const categories = [
+    t.categories.all,
+    t.categories.exterior,
+    t.categories.interior,
+    t.categories.virtual,
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState(t.categories.all);
+  const [selectedProject, setSelectedProject] = useState<
+    (typeof projects)[0] | null
+  >(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
-  const filteredProjects = selectedCategory === "Todos"
-    ? projects
-    : projects.filter((p) => p.category === selectedCategory);
+  // Update selected category when language changes to ensure valid filter
+  useEffect(() => {
+    setSelectedCategory(t.categories.all);
+  }, [language, t.categories.all]);
 
-  const openLightbox = (project: typeof projects[0], index: number) => {
+  // Reset category if language changes and the category name is no longer valid (though keys would be better, using names for now)
+  // Ideally, use keys for filtering, but for simple string comparison:
+  const filteredProjects =
+    selectedCategory === t.categories.all
+      ? projects
+      : projects.filter(p => p.category === selectedCategory);
+
+  const openLightbox = (project: (typeof projects)[0], index: number) => {
     setSelectedProject(project);
     setCurrentImageIndex(index);
   };
@@ -113,27 +121,44 @@ export default function Portfolio() {
   };
 
   const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % filteredProjects.length);
-    setSelectedProject(filteredProjects[(currentImageIndex + 1) % filteredProjects.length]);
+    setCurrentImageIndex(prev => (prev + 1) % filteredProjects.length);
+    setSelectedProject(
+      filteredProjects[(currentImageIndex + 1) % filteredProjects.length]
+    );
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + filteredProjects.length) % filteredProjects.length);
-    setSelectedProject(filteredProjects[(currentImageIndex - 1 + filteredProjects.length) % filteredProjects.length]);
+    setCurrentImageIndex(
+      prev => (prev - 1 + filteredProjects.length) % filteredProjects.length
+    );
+    setSelectedProject(
+      filteredProjects[
+      (currentImageIndex - 1 + filteredProjects.length) %
+      filteredProjects.length
+      ]
+    );
   };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4" style={glassCardStyle}>
+      <header
+        className="fixed top-0 left-0 right-0 z-50 px-6 py-4"
+        style={glassCardStyle}
+      >
         <div className="container flex items-center justify-between">
           <Link href="/">
-            <Button variant="ghost" className="text-foreground hover:text-primary">
+            <Button
+              variant="ghost"
+              className="text-foreground hover:text-primary"
+            >
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Voltar
+              {t.header.back}
             </Button>
           </Link>
-          <h1 className="text-xl font-light tracking-tight text-foreground">Portfólio</h1>
+          <h1 className="text-xl font-semibold text-foreground">
+            {t.header.title}
+          </h1>
           <div className="w-24" /> {/* Spacer para centralizar */}
         </div>
       </header>
@@ -149,18 +174,18 @@ export default function Portfolio() {
           >
             <motion.h2
               variants={fadeInUp}
-              className="text-4xl md:text-5xl font-light tracking-tight mb-8"
+              className="text-4xl md:text-5xl font-bold mb-6"
             >
-              Nossos{" "}
-              <span className="font-normal bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-                Projetos
+              {t.hero.title}{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
+                {t.hero.titleHighlight}
               </span>
             </motion.h2>
             <motion.p
               variants={fadeInUp}
-              className="text-xl md:text-2xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto tracking-wide mb-8"
+              className="text-lg text-muted-foreground mb-8"
             >
-              Conheça alguns dos trabalhos realizados pela nossa equipe. Cada projeto é único e desenvolvido com atenção aos detalhes para superar as expectativas dos nossos clientes.
+              {t.hero.description}
             </motion.p>
           </motion.div>
 
@@ -171,7 +196,7 @@ export default function Portfolio() {
             transition={{ delay: 0.3 }}
             className="flex flex-wrap justify-center gap-3 mb-12"
           >
-            {categories.map((category) => (
+            {categories.map(category => (
               <Button
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
@@ -223,10 +248,14 @@ export default function Portfolio() {
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                      <p className="text-primary text-[10px] uppercase tracking-widest font-light mb-1">{project.category}</p>
-                      <h3 className="text-xl font-light tracking-tight text-white mb-2">{project.title}</h3>
+                      <p className="text-primary text-sm font-medium mb-1">
+                        {project.category}
+                      </p>
+                      <h3 className="text-xl font-semibold text-white mb-2">
+                        {project.title}
+                      </h3>
                       <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
+                        {project.tags.map(tag => (
                           <span
                             key={tag}
                             className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/80"
@@ -245,7 +274,10 @@ export default function Portfolio() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-6" style={{ background: "rgba(0, 0, 0, 0.3)" }}>
+      <section
+        className="py-16 px-6"
+        style={{ background: "rgba(0, 0, 0, 0.3)" }}
+      >
         <div className="container">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -254,20 +286,17 @@ export default function Portfolio() {
             className="text-center max-w-2xl mx-auto"
           >
             <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Quer ver seu projeto aqui?
+              {t.cta.title}
             </h3>
-            <p className="text-muted-foreground mb-8">
-              Entre em contato conosco e transforme suas ideias em visualizações impressionantes.
-            </p>
-            <Link href="/">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              >
-                Solicite seu Orçamento
-                <ExternalLink className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
+            <p className="text-muted-foreground mb-8">{t.cta.description}</p>
+            <Button
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              onClick={() => setIsContactOpen(true)}
+            >
+              {t.cta.button}
+              <ExternalLink className="ml-2 w-5 h-5" />
+            </Button>
           </motion.div>
         </div>
       </section>
@@ -287,7 +316,7 @@ export default function Portfolio() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               className="relative max-w-5xl w-full"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               {/* Close button */}
               <button
@@ -312,18 +341,27 @@ export default function Portfolio() {
               </button>
 
               {/* Image */}
-              <div className="rounded-2xl overflow-hidden" style={glassCardStyle}>
+              <div
+                className="rounded-2xl overflow-hidden"
+                style={glassCardStyle}
+              >
                 <img
                   src={selectedProject.image}
                   alt={selectedProject.title}
                   className="w-full h-auto max-h-[70vh] object-contain"
                 />
                 <div className="p-6">
-                  <p className="text-primary text-[10px] uppercase tracking-widest font-light mb-1">{selectedProject.category}</p>
-                  <h3 className="text-2xl font-light tracking-tight text-white mb-2">{selectedProject.title}</h3>
-                  <p className="text-muted-foreground">{selectedProject.description}</p>
+                  <p className="text-primary text-sm font-medium mb-1">
+                    {selectedProject.category}
+                  </p>
+                  <h3 className="text-2xl font-semibold text-white mb-2">
+                    {selectedProject.title}
+                  </h3>
+                  <p className="text-muted-foreground">
+                    {selectedProject.description}
+                  </p>
                   <div className="flex flex-wrap gap-2 mt-4">
-                    {selectedProject.tags.map((tag) => (
+                    {selectedProject.tags.map(tag => (
                       <span
                         key={tag}
                         className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/80"
@@ -338,6 +376,11 @@ export default function Portfolio() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ContactFormModal
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+      />
     </div>
   );
 }

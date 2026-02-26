@@ -10,7 +10,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
 // Writes browser logs directly to files, trimmed when exceeding size limit
@@ -61,7 +60,7 @@ function writeToLogFile(source: LogSource, entries: unknown[]) {
   const logPath = path.join(LOG_DIR, `${source}.log`);
 
   // Format entries with timestamps
-  const lines = entries.map((entry) => {
+  const lines = entries.map(entry => {
     const ts = new Date().toISOString();
     return `[${ts}] ${JSON.stringify(entry)}`;
   });
@@ -137,7 +136,7 @@ function vitePluginManusDebugCollector(): Plugin {
         }
 
         let body = "";
-        req.on("data", (chunk) => {
+        req.on("data", chunk => {
           body += chunk.toString();
         });
 
@@ -169,13 +168,14 @@ function vitePluginEmailBackend(): Plugin {
         }
 
         let body = "";
-        req.on("data", (chunk) => {
+        req.on("data", chunk => {
           body += chunk.toString();
         });
 
         req.on("end", async () => {
           try {
-            const { nome, cpfCnpj, email, telefone, descricao } = JSON.parse(body);
+            const { nome, cpfCnpj, email, telefone, descricao } =
+              JSON.parse(body);
 
             const transporter = nodemailer.createTransport({
               host: "smtp.gmail.com",
@@ -188,8 +188,8 @@ function vitePluginEmailBackend(): Plugin {
               // Force IPv4 to avoid ECONNREFUSED on IPv6
               family: 4,
               tls: {
-                rejectUnauthorized: false
-              }
+                rejectUnauthorized: false,
+              },
             } as nodemailer.TransportOptions);
 
             const mailOptions = {
@@ -209,20 +209,38 @@ function vitePluginEmailBackend(): Plugin {
 
             await transporter.sendMail(mailOptions);
             res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: true, message: "Email enviado com sucesso!" }));
+            res.end(
+              JSON.stringify({
+                success: true,
+                message: "Email enviado com sucesso!",
+              })
+            );
           } catch (error) {
             console.error("Erro ao enviar email:", error);
-            const errorMessage = error instanceof Error ? error.message : String(error);
+            const errorMessage =
+              error instanceof Error ? error.message : String(error);
             res.writeHead(500, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({ success: false, message: `Erro ao enviar email: ${errorMessage}` }));
+            res.end(
+              JSON.stringify({
+                success: false,
+                message: `Erro ao enviar email: ${errorMessage}`,
+              })
+            );
           }
         });
       });
-    }
+    },
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginEmailBackend()];
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  vitePluginManusRuntime(),
+  vitePluginManusDebugCollector(),
+  vitePluginEmailBackend(),
+];
 
 export default defineConfig({
   plugins,
@@ -239,18 +257,6 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    chunkSizeWarningLimit: 600,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          animations: ["framer-motion"],
-          ui: ["lucide-react", "clsx", "tailwind-merge"],
-          charts: ["recharts"],
-          forms: ["react-hook-form", "zod", "@hookform/resolvers"],
-        },
-      },
-    },
   },
   server: {
     host: true,

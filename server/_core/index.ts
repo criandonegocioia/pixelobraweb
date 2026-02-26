@@ -1,65 +1,86 @@
 import "dotenv/config";
 import express from "express";
-import { createServer } from "http";
-import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
-import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
-import { serveStatic, setupVite } from "./vite";
+import { setupVite, serveStatic } from "./vite";
+import { getDb } from "../db";
 
-function isPortAvailable(port: number): Promise<boolean> {
-  return new Promise(resolve => {
-    const server = net.createServer();
-    server.listen(port, () => {
-      server.close(() => resolve(true));
-    });
-    server.on("error", () => resolve(false));
-  });
-}
+const app = express();
+const port = process.env.PORT || 3000;
 
-async function findAvailablePort(startPort: number = 3000): Promise<number> {
-  for (let port = startPort; port < startPort + 20; port++) {
-    if (await isPortAvailable(port)) {
-      return port;
-    }
+// Basic middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// DB Connection check (optional but good for startup)
+getDb().then(db => {
+  if (db) {
+    console.log("[Database] Connected successfully");
+  } else {
+    console.warn("[Database] Connection failed or not configured");
   }
-  throw new Error(`No available port found starting from ${startPort}`);
-}
+});
 
-async function startServer() {
-  const app = express();
-  const server = createServer(app);
-  // Configure body parser with larger size limit for file uploads
-  app.use(express.json({ limit: "50mb" }));
-  app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // OAuth callback under /api/oauth/callback
-  registerOAuthRoutes(app);
-  // tRPC API
-  app.use(
-    "/api/trpc",
-    createExpressMiddleware({
-      router: appRouter,
-      createContext,
-    })
-  );
-  // development mode uses Vite, production mode uses static files
+// tRPC API
+app.use(
+  "/api/trpc",
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+  })
+);
+
+// Setup Vite or Static files depending on env
+(async () => {
+  let server: ReturnType<typeof app.listen>;
+
   if (process.env.NODE_ENV === "development") {
+    // We need to pass the http server instance to vite for HMR
+    // However, app.listen returns the server.
+    // setupVite expects (app, server).
+    // So we need to create the server first or structure it so we can pass it.
+    // Looking at common patterns:
+
+    // Actually, looking at vite.ts: setupVite(app, server)
+    // We need a raw http server to attach WebSocket for HMR if using middleware mode.
+
+    // Let's create the http server manually
+    server = app.listen(port, () => {
+      console.log(`[Server] Listening on http://localhost:${port}`);
+    });
+
     await setupVite(app, server);
   } else {
     serveStatic(app);
+    server = app.listen(port, () => {
+      console.log(`[Server] Listening on http://localhost:${port}`);
+    });
   }
 
-  const preferredPort = parseInt(process.env.PORT || "3000");
-  const port = await findAvailablePort(preferredPort);
+  // Graceful shutdown
+  const shutdown = () => {
+    console.log("[Server] Shutting down...");
+    if (server) {
+      server.close(() => {
+        console.log("[Server] Closed successfully");
+        process.exit(0);
+      });
+    } else {
+      process.exit(0);
+    }
+  };
 
-  if (port !== preferredPort) {
-    console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
-  }
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 
-  server.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}/`);
+  // Global Error Handlers (prevent silent crashes)
+  process.on("uncaughtException", (err) => {
+    console.error("[Server] Uncaught Exception:", err);
+    // Optional: Restart gracefully or just log. keeping it alive might be risky but prevents immediate exit.
   });
-}
 
-startServer().catch(console.error);
+  process.on("unhandledRejection", (reason, promise) => {
+    console.error("[Server] Unhandled Rejection at:", promise, "reason:", reason);
+  });
+})();

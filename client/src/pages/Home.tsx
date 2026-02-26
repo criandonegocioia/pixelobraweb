@@ -50,136 +50,61 @@ import {
   MessageCircle,
   Send,
   CheckCircle,
+  FileText,
+  Building2,
 } from "lucide-react";
 import { useState } from "react";
+import { useLocation, Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { useLanguage, type Language } from "@/contexts/LanguageContext";
+import { translations } from "@/lib/i18n/translations";
 
 import { WhatsAppIcon, WHATSAPP_LINK } from "@/components/FloatingWhatsApp";
-import { Footer } from "@/components/Footer";
-import { Logo } from "@/components/Logo";
-import { INSTAGRAM_URL } from "@/const";
+import ContactFormModal from "@/components/ContactFormModal";
+
+// Logo URL - Logo com fundo transparente, Pixel em cinza claro, cores originais preservadas
+const LOGO_URL = "/images/logoin.jpg";
+const INSTAGRAM_URL = "https://instagram.com/pixelobra";
 
 // Image URLs
-// Image URLs
 const IMAGES = {
-  hero: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-1_1770149361000_na1fn_cGl4ZWwtb2JyYS1oZXJv.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTFfMTc3MDE0OTM2MTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFvWlhKdi5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=JSfFUUWkQqYSN8HNEhCgAF9zFjlwCCyvh~8yqreP0jEwd2ISnAwLx716gYkes3kJ32EZVTKJiciUZzGuwmRvm619hiF~29RMiLxBgnH~7UgdSmylx49qvIjeNLUfMG4fylxRvwb1zGgLhqQ~wvtPoHsZ4vM9tLnv1TxTr0D2lM1I-bHTSE9yDTMFnf4hxM4TAAhzDty5-k~jjwlqgFM8TwIzb6AJIhTjaKvtxk-n8Z5S~o8Xp1TrO8WnAnTRgswYSCiw9uj2gMRdtfqnJi-jkmLWvsP6Pz0YYdh4ScKBru~jwJxkBwFltEf-sXM-HKFQckzGY1b~~EITwb9vZqzUlw__",
-  render: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-2_1770149359000_na1fn_cGl4ZWwtb2JyYS1yZW5kZXI.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTJfMTc3MDE0OTM1OTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzF5Wlc1a1pYSS5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=igYIie1Mki1lfHujraWaVMuqFToZ9otNKsmX7y78EXHKaK6T7YOsuL7071S83MVW0t~aV5oXsxGo91R-MonQl6wdzQM6VWn9MZpr05jzS7HJX1lFW3snJvUiIEPtetp499vbKYJGaMy3rh4apouwdm6gtqTGHsnz~ajtgclgBd5VVXcSocD6AFo2b7BgHFWBIdySySxy~4GT6fHZs46taYy8oRC3G42rp3xSt8mChpRML0bULSCkIoyHLFMKoVreGdOmj8iftdPchntg4ywswNbqoNq1qikIm6I-ii5q~maqJdgWcsrdj0Aqm9VhpJ2-XmdxAsnUBCBqKEWSVHrrJw__",
-  interior: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-3_1770149364000_na1fn_cGl4ZWwtb2JyYS1pbnRlcmlvcg.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTNfMTc3MDE0OTM2NDAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFwYm5SbGNtbHZjZy5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=niCvEmC4ZYyUgc6zZ011KnjXDNMCzB5DRQlcpzFIYcNpD-YnYSAa1TVMiywTUEV0vL9QyNj3QTxGuFQo80ZXAnECo0XEtXauE8EY7rHkCBpBQmomY4a9KLaRDn4zsJuXu8Hp2I4M4bMhRtMfIeFNrUVoMXAUJxokb-8RMljgweMhJhan-H6itPISa3RAaatqgTAMDA~mSTkcU-jsxff8H0NToeg~E1hgdmCQG~HRUhJMY27jYmssA3i9Z4~UdwpB~LpV1ADaVAor5oUaAGmGs70oE2SeKozsbi6kbgheyNOzmuS4GFSRPx8fG5QxmqEDHcmJd4El1WbjZlzpsZnxgQ__",
-  staging: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-4_1770149355000_na1fn_cGl4ZWwtb2JyYS1zdGFnaW5n.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTRfMTc3MDE0OTM1NTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzF6ZEdGbmFXNW4uanBnP3gtb3NzLXByb2Nlc3M9aW1hZ2UvcmVzaXplLHdfMTkyMCxoXzE5MjAvZm9ybWF0LHdlYnAvcXVhbGl0eSxxXzgwIiwiQ29uZGl0aW9uIjp7IkRhdGVMZXNzVGhhbiI6eyJBV1M6RXBvY2hUaW1lIjoxNzk4NzYxNjAwfX19XX0_&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=f3ym95ajTuJbSSZNTgCqiWt2dbT6IYnSrdbWR7Wkxrw~9pIgCuhfhJJsNHYnbLXXtIo3w8Pu9wy4rQUraAbYPvSy1usLMYa0MlzUWen3o0VjJKXXSG25y2ARuK~I3weuECA8ANgbod-XEk9nGlSBln9T8JU62PYAUNSFeeoK50vMLkwq4crgiDruIZWL75~JQIjX-VQa1ZO1WHT9nC9gEIa0~8-AHME9G0BAt6p~C330EMOcxWUqWW7hsEam4Cvf6QJQOYvEvYDAaj6okReXBe2qWreq98jnZLUxeuKEmx3aga05-O73ZorXLbZfZ7R2urwJQ7C6Wpl9EScpodPV7Q__",
-  exterior: "https://private-us-east-1.manuscdn.com/sessionFile/1vpb164jWrNm8CzTseVWP3/sandbox/rtqOEo9M616C0W1htn4O9z-img-5_1770149361000_na1fn_cGl4ZWwtb2JyYS1leHRlcmlvcg.jpg?x-oss-process=image/resize,w_1920,h_1920/format,webp/quality,q_80&Expires=1798761600&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9wcml2YXRlLXVzLWVhc3QtMS5tYW51c2Nkbi5jb20vc2Vzc2lvbkZpbGUvMXZwYjE2NGpXck5tOEN6VHNlVldQMy9zYW5kYm94L3J0cU9FbzlNNjE2QzBXMWh0bjRPOXotaW1nLTVfMTc3MDE0OTM2MTAwMF9uYTFmbl9jR2w0Wld3dGIySnlZUzFsZUhSbGNtbHZjZy5qcGc~eC1vc3MtcHJvY2Vzcz1pbWFnZS9yZXNpemUsd18xOTIwLGhfMTkyMC9mb3JtYXQsd2VicC9xdWFsaXR5LHFfODAiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3OTg3NjE2MDB9fX1dfQ__&Key-Pair-Id=K2HSFNDJXOU9YS&Signature=GjUr0lHC-4RLhB9K1P41M5GPTthJPQyzWa3l0OZ36D0URqHpGlXu-t-ImEkEnLIilqZZVrjJIjWgtq7JjA2tcA722soHLgaZ7Mxn6N2Bl51R8fY9Z8Rnwn-LhYa4xBJsHwh-WCnjIcGFQQMCEkpVIosNzUAol9pYSGqXGfooiFnEAtXYi~z6e-m1lxLiDWedFbrzlFGI~HF6R9xofWihsDnzoWQaswvp-I3Bqdr5urMJ4NAJO2MlibtmJgJ~Yhig1mTSEbrXJdVTH2BcaV~lsgurMUDVCCQmJqCSkPPPYB6cc4VUdK4ZXCHGmbEBjIYqb3VL12jsIpTRS~1ziIH2wg__",
+  hero: "/images/back.jpg",
+  render: "/images/renderizacao2.jpeg",
+  visualiza: "/images/visualizacao.jpg",
+  decora: "/images/decoracao.jpg",
+  amplia: "/images/ampliacao.jpg",
+  edicao: "/images/edicao.jpg",
+  adicao: "/images/adicao.jpg",
+  humana: "/images/humanizada2.jpg",
+  solucao: "/images/loteamento.jpg",
+  render1: "/images/renderizacao.jpg",
+  render2: "/images/humanizada.jpg",
+  solucao1: "/images/loteamento2.jpg",
+  solucao2: "/images/decoracao2.jpg",
+  construcao: "/images/construcao.jpg",
+  visualiza2: "/images/visualizacao2.jpg",
+  visualiza3: "/images/visualizacao3.jpg",
+  animacao: "/images/animacao.jpg",
 };
 
 // Languages
 const languages = [
   { code: "PT", name: "Português" },
   { code: "EN", name: "English" },
-  { code: "DE", name: "Deutsch" },
-  { code: "FR", name: "Français" },
-  { code: "ES", name: "Español" },
-];
-
-// Tools data
-const tools = [
-  {
-    icon: Sparkles,
-    title: "Renderização",
-    description: "Mande-nos esboços, elevações, plantas baixas em 2D, planta de fachadas ou outra imagem e faremos renders fotorrealistas profissionais.",
-    image: IMAGES.render,
-  },
-  {
-    icon: Image,
-    title: "Visualização",
-    description: "Descreva sua visão sobre uma ideia e receba uma imagem arquitetônica realista.",
-    image: IMAGES.interior,
-  },
-  {
-    icon: Sofa,
-    title: "Decoração",
-    description: "Mobilie e decore virtualmente seu espaço.",
-    image: IMAGES.staging,
-  },
-  {
-    icon: ZoomIn,
-    title: "Ampliação",
-    description: "Melhore, amplie, faça close-ups, ajustes e modificação em seus renders, com formatos e texturas de alta resolução e detalhes refinados.",
-    image: IMAGES.exterior,
-  },
-  {
-    icon: Pencil,
-    title: "Edição",
-    description: "Modifique seu design apenas nos descrevendo as alterações desejadas.",
-    image: IMAGES.interior,
-  },
-  {
-    icon: Users,
-    title: "Adicione Pessoa e Objetos",
-    description: "Popule suas cenas com objetos e personagens ultrarrealistas. Inclusive, adicionado você, o cliente ou terceiros interessados na cena.",
-    image: IMAGES.exterior,
-  },
-  {
-    icon: Video,
-    title: "Animação e Vídeos",
-    description: "Transforme uma única imagem estática em uma animação de vídeo dinâmica e realista, com contexto e storytelling.",
-    image: IMAGES.hero,
-  },
-];
-
-// Benefits data
-const benefits = [
-  {
-    icon: Zap,
-    title: "Rápido e Eficiente",
-    description: "Do conceito ao render.",
-  },
-  {
-    icon: RefreshCw,
-    title: "Refinamento Ágil",
-    description: "Amplie ou edite imagens de acordo com sua visão.",
-  },
-  {
-    icon: MousePointer,
-    title: "Fluxo de Trabalho Integrado",
-    description: "Adicione pessoas ou anime a partir de uma única imagem.",
-  },
-];
-
-// FAQ data
-const faqs = [
-  {
-    question: "O que é a Pixel Obra?",
-    answer: "A Pixel Obra é uma empresa completa, com ferramentas que transforma esboços arquitetônicos, desenhos de elevação e plantas de fachadas em renderizações fotorrealistas, otimizando seu processo criativo do conceito à saída visual. Também permite implementar sua visão, mobiliar e decorar virtualmente seu espaço, melhorar e ampliar seus renders, modificar seu design e popular suas cenas com personagens realistas.",
-  },
-  {
-    question: "Os produtos da Pixel Obra são caros?",
-    answer: "Acreditamos que a sofisticação do design premium deve ser um diferencial acessível a quem busca se destacar. Temos afinidade com clientes exigentes pois nossa filosofia interna de trabalho é igualmente rigorosa, alinhando estética impecável à inteligência financeira que o seu negócio necessita. Solicite um orçamento para analisar nosso custo-benefício e descubra como a alta qualidade da nossa entrega pode transformar a conexão com o seu público.",
-  },
-
-  {
-    question: "Posso renderizar plantas de elevação?",
-    answer: "Sim. Plantas de elevação são totalmente Renderizáveis.",
-  },
-  {
-    question: "Posso modificar partes do meu render?",
-    answer: "Sim. Editamos e renderizamos o seu render. Você pode descrever o que gostaria de alterar ou desenhar. Você também pode adicionar pessoas e objetos no seu trabalho.",
-  },
-  {
-    question: "Como a Pixel Obra beneficia arquitetos?",
-    answer: "Ao transformarmos seus esboços e projetos em visuais fotorrealistas, a Pixel Obra ajuda arquitetos a iterar ideias de design e desenvolver apresentações sem ocupar seu tempo com renderização, liberando a sua criatividade em outros projetos.",
-  },
-  {
-    question: "Como a Pixel Obra apoia corretores imobiliários?",
-    answer: "Profissionais do mercado imobiliário agora podem ter visualizações polidas de seus imóveis, desde renderizações e decoração virtual até animações, sem depender de agências ou contratados externos e tornando suas apresentações visualmente atraentes e potencializando vendas.",
-  },
 ];
 
 // Featured generations
 const featuredImages = [
   IMAGES.hero,
   IMAGES.render,
-  IMAGES.interior,
-  IMAGES.staging,
-  IMAGES.exterior,
+  IMAGES.visualiza,
+  IMAGES.decora,
+  IMAGES.amplia,
+  IMAGES.edicao,
+  IMAGES.adicao,
+  IMAGES.humana,
+  IMAGES.solucao,
 ];
 
 // Animation variants
@@ -198,259 +123,54 @@ const staggerContainer = {
 
 // Glass card styles as inline styles
 const glassCardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.03)",
-  backdropFilter: "blur(10px)",
-  WebkitBackdropFilter: "blur(10px)",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
-  borderRadius: "0.5rem",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
+  background: "rgba(255, 255, 255, 0.05)",
+  backdropFilter: "blur(24px)",
+  WebkitBackdropFilter: "blur(24px)",
+  border: "1px solid rgba(255, 255, 255, 0.1)",
+  borderRadius: "0.75rem",
+  boxShadow:
+    "0 4px 24px -1px rgba(0, 0, 0, 0.2), inset 0 0 1px 0 rgba(255, 255, 255, 0.1)",
 };
 
-
-
-
-
-// Contact Form Modal
-function ContactFormModal({
-  isOpen,
-  onClose
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) {
-  const [formData, setFormData] = useState({
-    nome: "",
-    cpfCnpj: "",
-    email: "",
-    telefone: "",
-    descricao: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const submitContactMutation = trpc.contact.submit.useMutation({
-    onSuccess: (data) => {
-      if (data.success) {
-        setIsSuccess(true);
-        toast("Solicitação enviada com sucesso!", {
-          description: "Recebemos seu pedido e entraremos em contato em breve.",
-        });
-
-        setTimeout(() => {
-          setIsSuccess(false);
-          onClose();
-          setFormData({
-            nome: "",
-            cpfCnpj: "",
-            email: "",
-            telefone: "",
-            descricao: "",
-          });
-        }, 2000);
-      } else {
-        toast.error("Erro ao enviar solicitação", {
-          description: data.message,
-        });
-      }
-    },
-    onError: (error) => {
-      console.error("Erro no envio:", error);
-      toast.error("Erro ao enviar solicitação", {
-        description: error.message || "Houve um problema ao enviar seu pedido.",
-      });
-    },
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      await submitContactMutation.mutateAsync(formData);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const formatCpfCnpj = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    if (numbers.length <= 11) {
-      // CPF: 000.000.000-00
-      return numbers
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d{1,2})/, "$1-$2")
-        .replace(/(-\d{2})\d+?$/, "$1");
-    } else {
-      // CNPJ: 00.000.000/0000-00
-      return numbers
-        .replace(/(\d{2})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1/$2")
-        .replace(/(\d{4})(\d)/, "$1-$2")
-        .replace(/(-\d{2})\d+?$/, "$1");
-    }
-  };
-
-  const formatPhone = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    // Format: +55 (85) 99758-9946
-    if (numbers.length <= 2) {
-      return `+${numbers}`;
-    } else if (numbers.length <= 4) {
-      return `+${numbers.slice(0, 2)} (${numbers.slice(2)}`;
-    } else if (numbers.length <= 9) {
-      return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4)}`;
-    } else {
-      return `+${numbers.slice(0, 2)} (${numbers.slice(2, 4)}) ${numbers.slice(4, 9)}-${numbers.slice(9, 13)}`;
-    }
-  };
-
+// Logo Component - Apenas o símbolo (a logo já contém o nome)
+function Logo({ className = "h-10" }: { className?: string }) {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-background/95 backdrop-blur-xl border-white/10">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-            <Logo className="h-8" />
-            Solicite seu Orçamento
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground">
-            Preencha o formulário abaixo e entraremos em contato em breve.
-          </DialogDescription>
-        </DialogHeader>
-
-        <AnimatePresence mode="wait">
-          {isSuccess ? (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="py-12 text-center"
-            >
-              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Solicitação Enviada!</h3>
-              <p className="text-muted-foreground">Entraremos em contato em breve.</p>
-            </motion.div>
-          ) : (
-            <motion.form
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-4 mt-4"
-            >
-              <div className="space-y-2">
-                <Label htmlFor="nome">Nome *</Label>
-                <Input
-                  id="nome"
-                  placeholder="Seu nome completo"
-                  value={formData.nome}
-                  onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                  required
-                  className="bg-white/5 border-white/10 focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="cpfCnpj">CPF/CNPJ *</Label>
-                <Input
-                  id="cpfCnpj"
-                  placeholder="000.000.000-00 ou 00.000.000/0000-00"
-                  value={formData.cpfCnpj}
-                  onChange={(e) => setFormData({ ...formData, cpfCnpj: formatCpfCnpj(e.target.value) })}
-                  required
-                  className="bg-white/5 border-white/10 focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email">E-mail *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                  className="bg-white/5 border-white/10 focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="telefone" className="flex items-center gap-2">
-                  <WhatsAppIcon className="w-4 h-4 text-green-500" />
-                  Contato (WhatsApp) *
-                </Label>
-                <Input
-                  id="telefone"
-                  placeholder="+55 (00) 00000-0000"
-                  value={formData.telefone}
-                  onChange={(e) => setFormData({ ...formData, telefone: formatPhone(e.target.value) })}
-                  required
-                  className="bg-white/5 border-white/10 focus:border-primary"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="descricao">Descrição da Solicitação *</Label>
-                <Textarea
-                  id="descricao"
-                  placeholder="Descreva seu projeto e o que você precisa..."
-                  value={formData.descricao}
-                  onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                  required
-                  rows={4}
-                  className="bg-white/5 border-white/10 focus:border-primary resize-none"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"
-                    />
-                    Enviando...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4 mr-2" />
-                    Enviar Solicitação
-                  </>
-                )}
-              </Button>
-            </motion.form>
-          )}
-        </AnimatePresence>
-      </DialogContent>
-    </Dialog>
+    <img
+      src={LOGO_URL}
+      alt="Pixel Obra"
+      className={`${className} w-auto object-contain`}
+      style={{
+        filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.3))",
+        maxHeight: "48px",
+      }}
+    />
   );
 }
 
-
-
 // Language Selector Component
 function LanguageSelector() {
-  const [currentLang, setCurrentLang] = useState("PT");
+  const { language, setLanguage } = useLanguage();
 
-  const handleLanguageChange = (code: string) => {
-    setCurrentLang(code);
-    toast(`Idioma alterado para ${languages.find(l => l.code === code)?.name}`, {
-      description: "A tradução completa estará disponível em breve.",
-    });
+  const handleLanguageChange = (code: Language) => {
+    setLanguage(code);
+    const langName = languages.find(l => l.code === code)?.name;
+    const message =
+      code === "EN"
+        ? `Language changed to ${langName}`
+        : `Idioma alterado para ${langName}`;
+    toast(message);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="gap-1.5 text-muted-foreground hover:text-foreground"
+        >
           <Globe className="w-4 h-4" />
-          <span className="font-medium">{currentLang}</span>
+          <span className="font-medium">{language}</span>
           <ChevronDown className="w-3 h-3" />
         </Button>
       </DropdownMenuTrigger>
@@ -458,11 +178,11 @@ function LanguageSelector() {
         align="end"
         className="bg-background/95 backdrop-blur-xl border-white/10 min-w-[120px]"
       >
-        {languages.map((lang) => (
+        {languages.map(lang => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => handleLanguageChange(lang.code)}
-            className={`cursor-pointer ${currentLang === lang.code ? "bg-primary/20 text-primary" : ""}`}
+            onClick={() => handleLanguageChange(lang.code as Language)}
+            className={`cursor-pointer ${language === lang.code ? "bg-primary/20 text-primary" : ""}`}
           >
             <span className="font-medium">{lang.code}</span>
           </DropdownMenuItem>
@@ -472,197 +192,159 @@ function LanguageSelector() {
   );
 }
 
-// Header Component - Redesigned (Floating Pill)
+// Header Component
 function Header({ onOpenContact }: { onOpenContact: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language } = useLanguage();
+  const [, setLocation] = useLocation();
+  const t = translations[language].nav;
 
   const handleNavClick = () => {
-    toast("Funcionalidade em breve", {
-      description: "Esta seção estará disponível em breve.",
-    });
+    toast("Funcionalidade em breve");
   };
 
   return (
-    <>
-      <header className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-        {/* Floating Pill Container */}
-        <nav className="relative flex items-center justify-between h-14 md:h-16 px-6 bg-background/80 backdrop-blur-md border border-white/10 rounded-full shadow-2xl max-w-5xl w-full">
+    <header className="fixed top-0 left-0 right-0 z-50">
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-xl border-b border-white/5" />
+      <nav className="container relative flex items-center justify-between h-16 md:h-20">
+        {/* Logo */}
+        <a
+          href="/"
+          className="flex items-center group hover:opacity-90 transition-opacity"
+        >
+          <Logo className="h-10 md:h-12" />
+        </a>
 
-          {/* Logo (Left) */}
-          <a href="/" className="flex items-center group hover:opacity-90 transition-opacity mr-auto">
-            <Logo className="h-8 md:h-10" />
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/solucoes">
+            <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              {t.solutions}
+            </a>
+          </Link>
+          <a
+            href="/portfolio"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t.portfolio}
+          </a>
+          <a
+            href="#sobre-nos"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {t.about}
           </a>
 
-          {/* Desktop Navigation (Center) */}
-          <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <button onClick={handleNavClick} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Soluções
-            </button>
-            <a href="/portfolio" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Portfólio
-            </a>
-            <a href="#sobre-nos" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Sobre Nós
-            </a>
-            <button onClick={handleNavClick} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
-              Preços
-            </button>
-            <LanguageSelector />
-          </div>
+        </div>
 
-          {/* Desktop CTA (Right) */}
-          <div className="hidden md:flex items-center gap-4 ml-auto">
-            <Button variant="ghost" size="sm" onClick={handleNavClick} className="text-white/70 hover:text-white">
-              Entrar
-            </Button>
-            <Button
-              size="sm"
-              className="bg-transparent border border-cyan-400 text-white hover:bg-cyan-400/10 font-medium rounded-full px-6 shadow-[0_0_15px_rgba(34,211,238,0.3)] hover:shadow-[0_0_25px_rgba(34,211,238,0.5)] transition-all duration-300"
-              onClick={onOpenContact}
-            >
-              Solicite seu Orçamento
-            </Button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-4 md:hidden ml-auto">
-            <LanguageSelector />
-            <button
-              className="p-2 -mr-2 text-white"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 top-24 z-40 bg-background/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl md:hidden overflow-hidden"
+        {/* Desktop CTA */}
+        <div className="hidden md:flex items-center gap-3">
+          <LanguageSelector />
+          <Button variant="ghost" size="sm" onClick={() => setLocation("/login")}>
+            {t.login}
+          </Button>
+          <Button
+            size="sm"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={onOpenContact}
           >
-            <div className="p-6 flex flex-col gap-4">
-              <button onClick={handleNavClick} className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
-                Soluções
-              </button>
-              <a href="/portfolio" className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
-                Portfólio
-              </a>
-              <a href="#sobre-nos" className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
-                Sobre Nós
-              </a>
-              <button onClick={handleNavClick} className="text-left py-2 text-lg font-medium text-white/80 hover:text-white">
-                Preços
-              </button>
+            {translations[language].hero.cta}
+          </Button>
+        </div>
 
-              <div className="h-px bg-white/10 my-2" />
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden p-2 -mr-2"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
+          {mobileMenuOpen ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <Menu className="w-5 h-5" />
+          )}
+        </button>
+      </nav>
 
-              <Button variant="ghost" className="justify-start text-white/80" onClick={handleNavClick}>
-                Entrar
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-white/5"
+        >
+          <div className="container py-4 flex flex-col gap-4">
+            <Link href="/solucoes">
+              <a className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors block">
+                {t.solutions}
+              </a>
+            </Link>
+            <a
+              href="/portfolio"
+              className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t.portfolio}
+            </a>
+            <a
+              href="#sobre-nos"
+              className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {t.about}
+            </a>
+
+            <div className="py-2">
+              <LanguageSelector />
+            </div>
+            <div className="flex flex-col gap-2 pt-2 border-t border-white/5">
+              <Button
+                variant="ghost"
+                className="justify-start"
+                onClick={() => setLocation("/login")}
+              >
+                {t.login}
               </Button>
-              <Button className="w-full bg-primary hover:bg-primary/90 text-white font-medium rounded-full py-6" onClick={onOpenContact}>
-                Solicite seu Orçamento
+              <Button
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={onOpenContact}
+              >
+                {translations[language].hero.cta}
               </Button>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+          </div>
+        </motion.div>
+      )}
+    </header>
   );
 }
 
 // Hero Section
 function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
+  const { language } = useLanguage();
+  const t = translations[language].hero;
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* SVG Filters Definition for Edge Detection */}
-      <svg className="hidden">
-        <defs>
-          <filter id="edge-detection">
-            {/* Desaturate */}
-            <feColorMatrix type="saturate" values="0" />
-            {/* Edge Detection (finding transitions) */}
-            <feConvolveMatrix
-              order="3,3"
-              kernelMatrix="-1 -1 -1
-                            -1  8 -1
-                            -1 -1 -1"
-              divisor="1"
-              bias="0"
-              preserveAlpha="true"
-            />
-            {/* Invert colors to simulate blueprint/white-lines-on-dark */}
-            <feColorMatrix type="matrix" values="-1 0 0 0 1
-                                                  0 -1 0 0 1
-                                                  0 0 -1 0 1
-                                                  0 0 0 1 0" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Background Image - Cinematic & Clean */}
-      <div className="absolute inset-0 z-0 select-none pointer-events-none overflow-hidden">
-
-        {/* Container for the Zoom Animation - Applies to ALL layers to ensure perfect sync */}
+      {/* Background Image */}
+      <div className="absolute inset-0">
         <motion.div
-          className="absolute inset-0 w-full h-full"
-          initial={{ scale: 1.15 }}
-          animate={{ scale: 1.0 }}
+          initial={{ scale: 1 }}
+          animate={{ scale: 1.1 }}
           transition={{
-            duration: 14,
-            ease: "easeInOut",
+            duration: 20,
             repeat: Infinity,
             repeatType: "reverse",
-            repeatDelay: 1.0
+            ease: "linear",
           }}
+          className="w-full h-full"
         >
-          {/* Layer 1: Clay/Plaster Base (SketchUp Flat Look) - High Brightness/Low Contrast to wash out textures */}
-          <div className="absolute inset-0">
-            <img
-              src="/hero_render.jpg"
-              alt="Base Clay"
-              className="w-full h-full object-cover filter grayscale brightness-[1.3] contrast-[0.6]"
-            />
-          </div>
-
-          {/* Layer 2: Edges/Lines (Overlay) - Stronger edges */}
-          <div className="absolute inset-0 mix-blend-multiply opacity-80">
-            <img
-              src="/hero_render.jpg"
-              alt="Edges"
-              className="w-full h-full object-cover"
-              style={{ filter: "url(#edge-detection)" }}
-            />
-          </div>
-
-          {/* Layer 3: Realistic Render (Fade In) - Delayed start to show SketchUp first */}
-          <motion.div
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              duration: 12,
-              ease: "easeInOut",
-              repeat: Infinity,
-              repeatType: "reverse",
-              repeatDelay: 1.0
-            }}
-          >
-            <img
-              src="/hero_render.jpg"
-              alt="Render Realista"
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
+          <img
+            src={IMAGES.hero}
+            alt="Arquitetura moderna"
+            className="w-full h-full object-cover"
+          />
         </motion.div>
-
-        {/* Subtle Vignette - Static on top */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,oklch(0.1_0_0)_100%)] z-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80" />
       </div>
 
       {/* Content */}
@@ -671,40 +353,60 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
-          className="max-w-5xl mx-auto text-center"
+          className="max-w-4xl mx-auto text-center"
         >
-
           <h1
-            className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tighter mb-8 text-white leading-[1.1]"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+            style={{ fontSize: "51px" }}
           >
-            Tecnologia e Precisão em Projetos para <br className="hidden md:block" />
-            <span className="font-normal">Arquitetura, Construção Civil e Imobiliários</span>
+            {t.title}{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
+              {t.subtitle}
+            </span>
           </h1>
-
-          <p className="text-xl md:text-2xl text-white/50 font-light mb-10 max-w-2xl mx-auto tracking-wide">
-            Renders inteligentes e imersivos pela Pixel Obra.
-          </p>
 
           <motion.div variants={fadeInUp}>
             <Button
               size="lg"
-              className="bg-white text-black hover:bg-white/90 rounded-full px-10 py-7 text-lg font-medium tracking-wide transition-all duration-300 hover:scale-105"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg relative overflow-hidden"
               onClick={onOpenContact}
             >
-              Solicite seu Orçamento
+              {t.cta}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+      >
+        <div className="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-2">
+          <motion.div
+            animate={{ y: [0, 12, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="w-1.5 h-1.5 rounded-full bg-primary"
+          />
+        </div>
+      </motion.div>
     </section>
   );
 }
 
 // About Section
 function AboutSection() {
+  const { language } = useLanguage();
+  const t = translations[language].about;
+
   return (
-    <section id="sobre-nos" className="py-32 relative overflow-hidden bg-black/40">
+    <section
+      id="sobre-nos"
+      className="py-24 md:py-32 relative overflow-hidden bg-muted/20"
+    >
       <div className="container relative z-10">
         <motion.div
           initial="hidden"
@@ -713,41 +415,149 @@ function AboutSection() {
           variants={fadeInUp}
           className="max-w-4xl mx-auto text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-light tracking-tight mb-8 text-white">
-            Sobre <span className="font-normal">Nós</span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+            {t.title}{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
+              {t.highlight}
+            </span>
           </h2>
-          <p className="text-xl md:text-2xl text-white/70 leading-relaxed font-light max-w-3xl mx-auto tracking-wide">
-            "A Pixel Obra é uma plataforma dedicada à convergência entre arquitetura, construção e design, aplicando soluções digitais de alta precisão em projetos imobiliários. Unimos a exatidão do pixel à solidez da obra para transformar o mercado de engenharia e design."
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+            {t.description}
           </p>
         </motion.div>
       </div>
-    </section >
+    </section>
   );
 }
 
 // Tools Section
 function ToolsSection() {
-  const handleClick = () => {
-    toast("Funcionalidade em breve", {
-      description: "Esta seção estará disponível em breve.",
-    });
+  const { language } = useLanguage();
+  const [, setLocation] = useLocation();
+  const t = translations[language].tools;
+
+  // Tools data needs to be inside or memoized to use 't'
+  const toolsList = [
+    {
+      id: "render",
+      icon: Sparkles,
+      title: t.items.render.title,
+      description: t.items.render.description,
+      image: IMAGES.render,
+    },
+    {
+      id: "visualization",
+      icon: Image,
+      title: t.items.visualization.title,
+      description: t.items.visualization.description,
+      image: IMAGES.visualiza,
+    },
+    {
+      id: "decoration",
+      icon: Sofa,
+      title: t.items.decoration.title,
+      description: t.items.decoration.description,
+      image: IMAGES.decora,
+    },
+    {
+      id: "amplification",
+      icon: ZoomIn,
+      title: t.items.amplification.title,
+      description: t.items.amplification.description,
+      image: IMAGES.amplia,
+    },
+    {
+      id: "edition",
+      icon: Pencil,
+      title: t.items.edition.title,
+      description: t.items.edition.description,
+      image: IMAGES.edicao,
+    },
+    {
+      id: "addObjects",
+      icon: Users,
+      title: t.items.addObjects.title,
+      description: t.items.addObjects.description,
+      image: IMAGES.adicao,
+    },
+    {
+      id: "animation",
+      icon: Video,
+      title: t.items.animation.title,
+      description: t.items.animation.description,
+      image: IMAGES.animacao,
+    },
+    {
+      id: "solutions",
+      icon: Building2,
+      title: t.items.solutions.title,
+      description: t.items.solutions.description,
+      image: IMAGES.solucao,
+    },
+    {
+      id: "humanized",
+      icon: FileText,
+      title: t.items.humanized.title,
+      description: t.items.humanized.description,
+      image: IMAGES.humana,
+    },
+  ];
+
+  const handleClick = (id?: string) => {
+    switch (id) {
+      case "render":
+        setLocation("/renderiza");
+        break;
+      case "visualization":
+        setLocation("/visualiza");
+        break;
+      case "decoration":
+        setLocation("/decora");
+        break;
+      case "amplification":
+        setLocation("/amplia");
+        break;
+      case "edition":
+        setLocation("/edita");
+        break;
+      case "addObjects":
+        setLocation("/adiciona");
+        break;
+      case "animation":
+        setLocation("/anima");
+        break;
+      case "solutions":
+        setLocation("/solucoes");
+        break;
+      case "humanized":
+        setLocation("/humanizada");
+        break;
+      default:
+        toast("Funcionalidade em breve");
+    }
   };
 
   return (
-    <section className="py-32 relative">
+    <section className="py-24 md:py-32 relative">
       <div className="container">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
           variants={staggerContainer}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
-          <motion.p variants={fadeInUp} className="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">
-            Visões
+          <motion.p
+            variants={fadeInUp}
+            className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
+          >
+            {t.sectionTitle}
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-4xl md:text-5xl font-light tracking-tight text-white">
-            Nosso jeito de <span className="font-normal text-white">Ver</span>
+          <motion.h2
+            variants={fadeInUp}
+            className="text-3xl md:text-5xl font-bold tracking-tight"
+          >
+            {t.mainTitle}
           </motion.h2>
         </motion.div>
 
@@ -756,47 +566,44 @@ function ToolsSection() {
           whileInView="visible"
           viewport={{ once: true, margin: "-50px" }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {tools.map((tool, index) => (
+          {toolsList.map(tool => (
             <motion.div
-              key={tool.title}
+              key={tool.id}
               variants={fadeInUp}
-              className={`group relative overflow-hidden rounded-lg border border-white/10 bg-black/20 ${index === 0 || index === 3 ? "md:col-span-2" : ""
-                }`}
+              className="group overflow-hidden transition-all duration-300 hover:border-white/20"
+              style={glassCardStyle}
             >
-              {/* Image Background */}
-              <div className="absolute inset-0">
+              <div className="aspect-video relative overflow-hidden">
                 <img
                   src={tool.image}
                   alt={tool.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 opacity-60 group-hover:opacity-40"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              </div>
-
-              {/* Content Overlay */}
-              <div className="absolute inset-0 flex flex-col justify-end p-8 transition-all duration-500">
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <div className="flex items-center gap-3 mb-3 opacity-80 group-hover:opacity-100">
-                    <div className="p-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-                      <tool.icon className="w-4 h-4 text-white" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-lg bg-primary/20 backdrop-blur-sm flex items-center justify-center">
+                      <tool.icon className="w-5 h-5 text-primary" />
                     </div>
-                    <h3 className="text-xl font-medium text-white tracking-wide">{tool.title}</h3>
+                    <h3 className="text-lg font-semibold">{tool.title}</h3>
                   </div>
-
-                  <p className="text-white/60 text-sm leading-relaxed max-w-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                    {tool.description}
-                  </p>
-
-                  <Button
-                    variant="link"
-                    className="text-white/80 hover:text-white p-0 h-auto opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200"
-                    onClick={handleClick}
-                  >
-                    Explorar <ChevronRight className="w-4 h-4 ml-1" />
-                  </Button>
                 </div>
+              </div>
+              <div className="p-5">
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                  {tool.description}
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary/80 p-0 h-auto"
+                  onClick={() => handleClick(tool.id)}
+                >
+                  {t.action}
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
               </div>
             </motion.div>
           ))}
@@ -808,41 +615,73 @@ function ToolsSection() {
 
 // Benefits Section
 function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
+  const { language } = useLanguage();
+  const t = translations[language].benefits;
+  const toolsT = translations[language].tools;
+
+  const benefitsList = [
+    {
+      icon: Zap,
+      title: t.items.fast.title,
+      description: t.items.fast.description,
+    },
+    {
+      icon: RefreshCw,
+      title: t.items.agile.title,
+      description: t.items.agile.description,
+    },
+    {
+      icon: MousePointer,
+      title: t.items.integrated.title,
+      description: t.items.integrated.description,
+    },
+  ];
+
+  const ctaT = translations[language].hero;
+
   return (
-    <section className="py-32 relative overflow-hidden">
+    <section className="py-24 md:py-32 relative overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0">
         <img
-          src={IMAGES.exterior}
+          src={IMAGES.amplia}
           alt="Arquitetura"
-          className="w-full h-full object-cover opacity-10 grayscale"
+          className="w-full h-full object-cover opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background" />
       </div>
 
-      <div className="container relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container relative">
+        <div className="flex flex-col gap-12 lg:gap-20 items-center">
           {/* Content */}
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={staggerContainer}
+            className="text-center max-w-4xl mx-auto"
           >
-            <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-light tracking-tight mb-12 text-white leading-tight">
-              A forma mais fácil de criar <br />
-              <span className="font-normal">renderizações arquitetônicas.</span>
+            <motion.h2
+              variants={fadeInUp}
+              className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
+            >
+              {t.title}{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
+                {t.highlight}
+              </span>
             </motion.h2>
 
-            <motion.div variants={fadeInUp} className="space-y-8 mb-12">
-              {benefits.map((benefit) => (
-                <div key={benefit.title} className="flex gap-6 group">
-                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-white/10 transition-colors">
-                    <benefit.icon className="w-5 h-5 text-white" />
+            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              {benefitsList.map(benefit => (
+                <div key={benefit.title} className="flex flex-col items-center text-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <benefit.icon className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-medium mb-2 text-white">{benefit.title}</h3>
-                    <p className="text-white/60 text-base font-light">{benefit.description}</p>
+                    <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                    <p className="text-muted-foreground text-sm">
+                      {benefit.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -851,34 +690,70 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
             <motion.div variants={fadeInUp}>
               <Button
                 size="lg"
-                className="bg-white text-black hover:bg-white/90 rounded-full px-8 py-6 text-lg font-medium tracking-wide"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={onOpenContact}
               >
-                Solicite seu Orçamento
+                {ctaT.cta}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
             </motion.div>
           </motion.div>
 
-          {/* Image */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl mx-auto"
           >
-            <div className="p-2 rounded-xl" style={glassCardStyle}>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
               <img
-                src={IMAGES.render}
-                alt="Antes e depois do render"
-                className="w-full rounded-lg"
+                src={IMAGES.render1}
+                alt={toolsT.items.render.title}
+                className="w-full h-auto rounded-lg"
               />
             </div>
-            {/* Floating badge */}
-            <div className="absolute -bottom-4 -left-4 px-4 py-2 rounded-xl" style={glassCardStyle}>
-              <p className="text-xs text-muted-foreground">Projetos em tempo hábil</p>
-              <p className="text-lg font-semibold text-primary">Solicite orçamento</p>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.render2}
+                alt={toolsT.items.humanized.title}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.solucao1}
+                alt={toolsT.items.solutions.title}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.solucao2}
+                alt={toolsT.items.decoration.title}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.construcao}
+                alt={toolsT.items.construction.title}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.visualiza2}
+                alt={toolsT.items.visualization.title}
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
+            <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
+              <img
+                src={IMAGES.visualiza3}
+                alt={toolsT.items.visualization.title}
+                className="w-full h-auto rounded-lg"
+              />
             </div>
           </motion.div>
         </div>
@@ -889,6 +764,9 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
 
 // Featured Section
 function FeaturedSection() {
+  const { language } = useLanguage();
+  const t = translations[language].featured;
+
   return (
     <section className="py-24 md:py-32">
       <div className="container">
@@ -899,14 +777,23 @@ function FeaturedSection() {
           variants={staggerContainer}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeInUp} className="text-primary text-sm font-medium tracking-wider uppercase mb-4">
-            Galeria
+          <motion.p
+            variants={fadeInUp}
+            className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
+          >
+            {t.sectionTitle}
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-bold tracking-tight mb-4">
-            Gerações em Destaque
+          <motion.h2
+            variants={fadeInUp}
+            className="text-3xl md:text-5xl font-bold tracking-tight mb-4"
+          >
+            {t.title}
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-muted-foreground max-w-2xl mx-auto">
-            Descubra imagens geradas recentemente por nossa equipe
+          <motion.p
+            variants={fadeInUp}
+            className="text-muted-foreground max-w-2xl mx-auto"
+          >
+            {t.description}
           </motion.p>
         </motion.div>
 
@@ -940,8 +827,13 @@ function FeaturedSection() {
 
 // FAQ Section
 function FAQSection() {
+  const { language } = useLanguage();
+  const t = translations[language].faq;
+
+  const faqsList = [t.q1, t.q2, t.q3, t.q4, t.q5, t.q6];
+
   return (
-    <section className="py-24 md:py-32 bg-muted/30">
+    <section id="faq" className="py-24 md:py-32 bg-muted/30">
       <div className="container">
         <motion.div
           initial="hidden"
@@ -950,11 +842,17 @@ function FAQSection() {
           variants={staggerContainer}
           className="text-center mb-16"
         >
-          <motion.p variants={fadeInUp} className="text-primary text-sm font-medium tracking-wider uppercase mb-4">
-            FAQ
+          <motion.p
+            variants={fadeInUp}
+            className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
+          >
+            {t.sectionTitle}
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-5xl font-bold tracking-tight">
-            Perguntas Frequentes
+          <motion.h2
+            variants={fadeInUp}
+            className="text-3xl md:text-5xl font-bold tracking-tight"
+          >
+            {t.title}
           </motion.h2>
         </motion.div>
 
@@ -966,7 +864,7 @@ function FAQSection() {
           className="max-w-3xl mx-auto"
         >
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
+            {faqsList.map((faq, index) => (
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
@@ -990,11 +888,14 @@ function FAQSection() {
 
 // CTA Section
 function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
+  const { language } = useLanguage();
+  const t = translations[language].cta;
+
   return (
     <section className="py-24 md:py-32 relative overflow-hidden">
       <div className="absolute inset-0">
         <img
-          src={IMAGES.interior}
+          src={IMAGES.visualiza}
           alt="Interior"
           className="w-full h-full object-cover opacity-30"
         />
@@ -1010,14 +911,23 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
           className="p-8 md:p-12 lg:p-16 text-center max-w-4xl mx-auto rounded-2xl"
           style={glassCardStyle}
         >
-          <motion.p variants={fadeInUp} className="text-primary text-sm font-medium tracking-wider uppercase mb-4">
-            Precisa de mais?
+          <motion.p
+            variants={fadeInUp}
+            className="text-primary text-sm font-medium tracking-wider uppercase mb-4"
+          >
+            {t.label}
           </motion.p>
-          <motion.h2 variants={fadeInUp} className="text-2xl md:text-4xl font-bold tracking-tight mb-4">
-            Considere nossos Serviços Empresariais personalizados
+          <motion.h2
+            variants={fadeInUp}
+            className="text-2xl md:text-4xl font-bold tracking-tight mb-4"
+          >
+            {t.title}
           </motion.h2>
-          <motion.p variants={fadeInUp} className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Soluções sob medida para escritórios de arquitetura, construtoras, incorporadoras e corretores que precisam de volume e personalização.
+          <motion.p
+            variants={fadeInUp}
+            className="text-muted-foreground mb-8 max-w-2xl mx-auto"
+          >
+            {t.description}
           </motion.p>
           <motion.div variants={fadeInUp}>
             <Button
@@ -1026,7 +936,7 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
               onClick={onOpenContact}
             >
-              Fale conosco
+              {t.button}
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </motion.div>
@@ -1036,7 +946,158 @@ function CTASection({ onOpenContact }: { onOpenContact: () => void }) {
   );
 }
 
+// Footer Component
+function Footer({ onOpenContact }: { onOpenContact?: () => void }) {
+  const { language } = useLanguage();
+  const t = translations[language].footer;
 
+  const handleClick = () => {
+    toast("Funcionalidade em breve");
+  };
+
+  return (
+    <footer className="py-16 border-t border-white/5">
+      <div className="container">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          {/* Brand */}
+          <div className="col-span-2 md:col-span-1">
+            <a
+              href="/"
+              className="flex items-center mb-4 hover:opacity-90 transition-opacity"
+            >
+              <Logo className="h-10" />
+            </a>
+            <p className="text-sm text-muted-foreground">{t.description}</p>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="font-semibold mb-4">{t.resources}</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/solucoes">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {t.links.solutions}
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="/portfolio"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t.links.portfolio}
+                </a>
+              </li>
+
+              <li>
+                <a
+                  href="#faq"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t.links.faq}
+                </a>
+              </li>
+
+            </ul>
+          </div>
+
+          {/* Company */}
+          <div>
+            <h4 className="font-semibold mb-4">{t.company}</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/aviso-legal">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {t.links.legal}
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/politica-privacidade">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {t.links.privacy}
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/termos-de-servico">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {t.links.terms}
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/politica-de-cookies">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    {t.links.cookies}
+                  </a>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h4 className="font-semibold mb-4">{t.support}</h4>
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={onOpenContact || handleClick}
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {t.links.help}
+                </button>
+              </li>
+              <li>
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2"
+                >
+                  <WhatsAppIcon className="w-4 h-4" />
+                  WhatsApp
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Pixel Obra. {t.rights}
+          </p>
+          <div className="flex items-center gap-4">
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              </svg>
+            </a>
+            <a
+              href={WHATSAPP_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <WhatsAppIcon className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 // Main Home Component
 export default function Home() {
@@ -1054,7 +1115,7 @@ export default function Home() {
         <FAQSection />
         <CTASection onOpenContact={() => setIsContactOpen(true)} />
       </main>
-      <Footer />
+      <Footer onOpenContact={() => setIsContactOpen(true)} />
       <ContactFormModal
         isOpen={isContactOpen}
         onClose={() => setIsContactOpen(false)}

@@ -27,7 +27,9 @@ export interface ContactFormData {
   descricao: string;
 }
 
-export async function sendContactEmail(data: ContactFormData): Promise<{ success: boolean; message: string }> {
+export async function sendContactEmail(
+  data: ContactFormData
+): Promise<{ success: boolean; message: string }> {
   try {
     const transporter = createTransporter();
 
@@ -68,7 +70,7 @@ ${data.descricao}
     <tr>
       <td style="padding: 10px; border-bottom: 1px solid #eee; font-weight: bold;">WhatsApp:</td>
       <td style="padding: 10px; border-bottom: 1px solid #eee;">
-        <a href="https://wa.me/${data.telefone.replace(/\D/g, '')}">${data.telefone}</a>
+        <a href="https://wa.me/${data.telefone.replace(/\D/g, "")}">${data.telefone}</a>
       </td>
     </tr>
   </table>
@@ -95,15 +97,24 @@ ${data.descricao}
 }
 
 // Function to verify email configuration
-export async function verifyEmailConfig(): Promise<{ success: boolean; message: string }> {
+export async function verifyEmailConfig(): Promise<{
+  success: boolean;
+  message: string;
+}> {
   try {
     if (!ENV.emailUser || !ENV.emailPass) {
-      return { success: false, message: "Credenciais de e-mail não configuradas" };
+      return {
+        success: false,
+        message: "Credenciais de e-mail não configuradas",
+      };
     }
 
     const transporter = createTransporter();
     await transporter.verify();
-    return { success: true, message: "Configuração de e-mail verificada com sucesso" };
+    return {
+      success: true,
+      message: "Configuração de e-mail verificada com sucesso",
+    };
   } catch (error) {
     console.error("Erro ao verificar configuração de email:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
