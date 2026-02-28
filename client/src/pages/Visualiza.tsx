@@ -25,7 +25,7 @@ const IMAGES = {
     ideia2: "/images/visualizacao/ideia2.jpg",
     ideia3: "/images/visualizacao/ideia3.jpg",
     projeto1: "/images/visualizacao/projeto1.jpg",
-    projeto2: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto2_f285dcc8.jpg",
+    projeto2: "/images/visualizacao/projeto2.jpg",
     projeto3: "/images/visualizacao/projeto3.jpg",
 };
 

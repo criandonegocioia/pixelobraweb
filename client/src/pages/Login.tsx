@@ -52,7 +52,7 @@ export default function Login() {
                     {/* Imagem no topo */}
                     <div className="w-full h-48 mb-6 rounded-2xl overflow-hidden shadow-xl border border-white/5 relative bg-black/20 p-4 flex items-center justify-center">
                         <img
-                            src="/images/logoin.jpg"
+                            src="/logo.jpg"
                             alt="Login Image"
                             className="w-full h-full object-contain z-10"
                         />

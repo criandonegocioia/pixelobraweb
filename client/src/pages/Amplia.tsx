@@ -21,11 +21,11 @@ import PhoneMockup from "@/components/PhoneMockup";
 
 // Imagens do portfólio (usando as imagens já geradas)
 const IMAGES = {
-    ideia1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia1_e13b74d4.jpg",
+    ideia1: "/images/ampliacao/ideia1.jpg",
     ideia2: "/images/ampliacao/ideia2.jpg",
-    ideia3: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia3_ebf313bf.jpg",
+    ideia3: "/images/ampliacao/ideia3.jpg",
     projeto1: "/images/ampliacao/projeto1.jpg",
-    projeto2: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto2_29641a66.jpg",
+    projeto2: "/images/ampliacao/projeto2.jpg",
     projeto3: "/images/ampliacao/projeto3.jpg",
 };
 

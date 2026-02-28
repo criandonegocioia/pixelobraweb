@@ -510,9 +510,9 @@ export const translations = {
             },
             categories: { all: "Todos", exterior: "Renderização Exterior", interior: "Design de Interiores", virtual: "Decoração Virtual", staging: "Staging" },
             projects: [ // Copied projects for valid types
-                { id: 1, title: "Residência Moderna", category: "Ideia 3", description: "Projeto residencial de alto padrão com fachada em vidro e madeira. Renderização fotorrealista destacando a integração com a paisagem.", tags: ["Residencial", "Exterior", "Moderno"] },
+                { id: 1, title: "Residência Moderna", category: "Ideia 1", description: "Projeto residencial de alto padrão com fachada em vidro e madeira. Renderização fotorrealista destacando a integração com a paisagem.", tags: ["Residencial", "Exterior", "Moderno"] },
                 { id: 2, title: "Pátio Conceito", category: "Ideia 2", description: "Visualização de pátio com conceito aberto, que será a entrada principal de uma sala de espetáculos.", tags: ["Comercial", "Interior", "Contemporâneo"] },
-                { id: 3, title: "Casa Cubista Moderna", category: "Ideia 1", description: "Projeto de casa com inspiração purista, volumes suspensos e vista panorâmica.", tags: ["Casa", "Exterior", "Luxo"] },
+                { id: 3, title: "Casa Cubista Moderna", category: "Ideia 3", description: "Projeto de casa com inspiração purista, volumes suspensos e vista panorâmica.", tags: ["Casa", "Exterior", "Luxo"] },
                 { id: 4, title: "Lounge residencial", category: "Projeto 1", description: "Staging virtual de lounge com estilo industrial, mobiliário contemporâneo e iluminação natural.", tags: ["Lounge", "Staging", "Contemporâneo"] },
                 { id: 5, title: "Edifício Corporativo", category: "Projeto 2", description: "Fachada de edifício comercial com design sustentável e certificação LEED.", tags: ["Comercial", "Exterior", "Sustentável"] },
                 { id: 6, title: "Casa de Praia", category: "Projeto 3", description: "Residência de veraneio com arquitetura tropical, integração indoor-outdoor e materiais naturais.", tags: ["Residencial", "Praia", "Tropical"] },
@@ -1110,9 +1110,9 @@ export const translations = {
             },
             categories: { all: "All", exterior: "External Rendering", interior: "Interior Design", virtual: "Virtual Staging", staging: "Staging" },
             projects: [ // Copied projects for valid types
-                { id: 1, title: "Modern Residence", category: "Idea 3", description: "High-end residential project with glass and wood facade. Photorealistic rendering highlighting landscape integration.", tags: ["Residential", "Exterior", "Modern"] },
+                { id: 1, title: "Modern Residence", category: "Idea 1", description: "High-end residential project with glass and wood facade. Photorealistic rendering highlighting landscape integration.", tags: ["Residential", "Exterior", "Modern"] },
                 { id: 2, title: "Concept Patio", category: "Idea 2", description: "Visualization of an open-concept patio, serving as the main entrance to a performance hall.", tags: ["Commercial", "Interior", "Contemporary"] },
-                { id: 3, title: "Modern Cubist House", category: "Idea 1", description: "Purist-inspired house project with suspended volumes and panoramic views.", tags: ["House", "Exterior", "Luxury"] },
+                { id: 3, title: "Modern Cubist House", category: "Idea 3", description: "Purist-inspired house project with suspended volumes and panoramic views.", tags: ["House", "Exterior", "Luxury"] },
                 { id: 4, title: "Residential Lounge", category: "Project 1", description: "Virtual staging of industrial-style lounge with contemporary furniture and natural lighting.", tags: ["Lounge", "Staging", "Contemporary"] },
                 { id: 5, title: "Corporate Building", category: "Project 2", description: "Commercial building facade with sustainable design and LEED certification.", tags: ["Commercial", "Exterior", "Sustainable"] },
                 { id: 6, title: "Beach House", category: "Project 3", description: "Summer residence with tropical architecture, indoor-outdoor integration, and natural materials.", tags: ["Residential", "Beach", "Tropical"] },

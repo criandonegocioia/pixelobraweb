@@ -20,8 +20,8 @@ import ContactFormModal from "@/components/ContactFormModal";
 
 // Imagens do portfólio (usando as imagens já geradas)
 const PORTFOLIO_IMAGES = {
-  casa1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/casa1_e8d42890.jpg",
-  casa2: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/casa2_797a5354.jpg",
+  casa1: "/images/portfolio/casa1.jpg",
+  casa2: "/images/portfolio/casa2.jpg",
   casa3: "/images/portfolio/casa3.jpg",
   casa4: "/images/portfolio/casa4.jpg",
   hall1: "/images/portfolio/hall1.jpg",
@@ -33,7 +33,7 @@ const PORTFOLIO_IMAGES = {
   sala1: "/images/portfolio/sala1.jpg",
   sala2: "/images/portfolio/sala2.jpg",
   sala3: "/images/portfolio/sala3.jpg",
-  sala4: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/sala4_e87e80dd.jpg",
+  sala4: "/images/portfolio/sala4.jpg",
 };
 
 // Map IDs to specific images since translation file doesn't import them

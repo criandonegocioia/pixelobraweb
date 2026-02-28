@@ -64,7 +64,7 @@ import { WhatsAppIcon, WHATSAPP_LINK } from "@/components/FloatingWhatsApp";
 import ContactFormModal from "@/components/ContactFormModal";
 
 // Logo URL - Logo com fundo transparente, Pixel em cinza claro, cores originais preservadas
-const LOGO_URL = "/images/logoin.jpg";
+const LOGO_URL = "/logo.jpg";
 const INSTAGRAM_URL = "https://instagram.com/pixelobra";
 
 // Image URLs
@@ -73,16 +73,16 @@ const IMAGES = {
   render: "/images/renderizacao2.jpeg",
   visualiza: "/images/visualizacao.jpg",
   decora: "/images/decoracao.jpg",
-  amplia: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ampliacao_80935b08.jpg",
+  amplia: "/images/ampliacao.jpg",
   edicao: "/images/edicao.jpg",
-  adicao: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/adicao_e72fdbc2.jpg",
+  adicao: "/images/adicao.jpg",
   humana: "/images/humanizada2.jpg",
   solucao: "/images/loteamento.jpg",
   render1: "/images/renderizacao.jpg",
   render2: "/images/humanizada.jpg",
   solucao1: "/images/loteamento2.jpg",
   solucao2: "/images/decoracao2.jpg",
-  construcao: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/construcao_eb7f09d0.jpg",
+  construcao: "/images/construcao.jpg",
   visualiza2: "/images/visualizacao2.jpg",
   visualiza3: "/images/visualizacao3.jpg",
   animacao: "/images/animacao.jpg",
@@ -218,7 +218,7 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-8">
           <Link href="/solucoes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-              {t.solutions}
+            {t.solutions}
           </Link>
           <a
             href="/portfolio"
@@ -273,7 +273,7 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
         >
           <div className="container py-4 flex flex-col gap-4">
             <Link href="/solucoes" className="text-left py-2 text-muted-foreground hover:text-foreground transition-colors block">
-                {t.solutions}
+              {t.solutions}
             </Link>
             <a
               href="/portfolio"
@@ -972,7 +972,7 @@ function Footer({ onOpenContact }: { onOpenContact?: () => void }) {
             <ul className="space-y-2">
               <li>
                 <Link href="/solucoes" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {t.links.solutions}
+                  {t.links.solutions}
                 </Link>
               </li>
               <li>
@@ -1006,22 +1006,22 @@ function Footer({ onOpenContact }: { onOpenContact?: () => void }) {
             <ul className="space-y-2">
               <li>
                 <Link href="/aviso-legal" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {t.links.legal}
+                  {t.links.legal}
                 </Link>
               </li>
               <li>
                 <Link href="/politica-privacidade" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {t.links.privacy}
+                  {t.links.privacy}
                 </Link>
               </li>
               <li>
                 <Link href="/termos-de-servico" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {t.links.terms}
+                  {t.links.terms}
                 </Link>
               </li>
               <li>
                 <Link href="/politica-de-cookies" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                    {t.links.cookies}
+                  {t.links.cookies}
                 </Link>
               </li>
             </ul>
