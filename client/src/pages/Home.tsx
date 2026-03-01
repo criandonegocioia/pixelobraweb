@@ -3,7 +3,7 @@
  * - Transparência em camadas com blur e opacidade
  * - Luz como protagonista - gradientes sutis
  * - Paleta: Azul noturno profundo (#0C1929) com acentos cyan (#00D4FF) e âmbar (#FFB800)
- * - Tipografia: Outfit (moderna e geométrica)
+ * - Tipografia: Satoshi (moderna e premium)
  */
 
 import { Button } from "@/components/ui/button";
@@ -356,9 +356,7 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             style={{ fontSize: "51px" }}
           >
             {t.title}{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-              {t.subtitle}
-            </span>
+            {t.subtitle}
           </h1>
 
           <motion.div variants={fadeInUp}>
@@ -413,9 +411,7 @@ function AboutSection() {
         >
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
             {t.title}{" "}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-              {t.highlight}
-            </span>
+            {t.highlight}
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
             {t.description}
@@ -662,9 +658,7 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
               className="text-3xl md:text-5xl font-bold tracking-tight mb-6"
             >
               {t.title}{" "}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-                {t.highlight}
-              </span>
+              {t.highlight}
             </motion.h2>
 
             <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">

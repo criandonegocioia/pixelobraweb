@@ -182,9 +182,7 @@ export default function Adiciona() {
                             className="text-4xl md:text-5xl font-bold mb-6"
                         >
                             {t.hero.title}{" "}
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-                                {t.hero.titleHighlight}
-                            </span>
+                            {t.hero.titleHighlight}
                         </motion.h2>
                         <motion.p
                             variants={fadeInUp}

@@ -19,7 +19,7 @@ import { translations } from "@/lib/i18n/translations";
 
 import { WhatsAppIcon } from "@/components/FloatingWhatsApp";
 
-const LOGO_URL = "/images/logo.png";
+const LOGO_URL = "/logo.jpg";
 
 function Logo({ className = "h-10" }: { className?: string }) {
   return (

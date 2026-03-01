@@ -183,7 +183,7 @@ const SolutionSection = ({
                     variants={fadeInUp}
                     className="text-center max-w-4xl mx-auto mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center tracking-tight text-foreground">
                         {title}
                     </h2>
                 </motion.div>
@@ -307,7 +307,7 @@ const ArchitectureSection = ({
                     variants={fadeInUp}
                     className="text-center max-w-4xl mx-auto mb-16"
                 >
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+                    <h2 className="text-4xl md:text-5xl font-bold mb-8 text-center tracking-tight text-foreground">
                         {title}
                     </h2>
                 </motion.div>
@@ -476,9 +476,7 @@ export default function Solucoes() {
                             className="text-4xl md:text-5xl font-bold mb-6"
                         >
                             {t.hero.title}{" "}
-                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-amber-400">
-                                {t.hero.titleHighlight}
-                            </span>
+                            {t.hero.titleHighlight}
                         </motion.h2>
                         <motion.p
                             variants={fadeInUp}

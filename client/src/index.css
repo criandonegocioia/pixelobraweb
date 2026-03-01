@@ -8,11 +8,11 @@
  * - Transparência em camadas com blur e opacidade
  * - Luz como protagonista - gradientes sutis
  * - Paleta: Azul noturno profundo com acentos cyan e âmbar
- * - Tipografia: Outfit (moderna e geométrica)
+ * - Tipografia: Satoshi (moderna e premium)
  */
 
 @theme inline {
-  --font-sans: "Outfit", system-ui, sans-serif;
+  --font-sans: "Satoshi", system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -136,7 +136,7 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: "Outfit", system-ui, sans-serif;
+    font-family: "Satoshi", system-ui, sans-serif;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
