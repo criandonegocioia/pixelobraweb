@@ -188,8 +188,10 @@ export default function ComponentsShowcase() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // AI ChatBox demo state
+  // Teste de commit github
+
   const [chatMessages, setChatMessages] = useState<Message[]>([
-    { role: "system", content: "You are a helpful assistant." },
+    { role: "system", content: "You are a helpful assistant!" },
   ]);
   const [isChatLoading, setIsChatLoading] = useState(false);
 
@@ -475,9 +477,8 @@ export default function ComponentsShowcase() {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className={`w-full justify-start text-left font-normal ${
-                          !datePickerDate && "text-muted-foreground"
-                        }`}
+                        className={`w-full justify-start text-left font-normal ${!datePickerDate && "text-muted-foreground"
+                          }`}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {datePickerDate ? (
@@ -544,14 +545,14 @@ export default function ComponentsShowcase() {
                       >
                         {selectedFramework
                           ? [
-                              { value: "react", label: "React" },
-                              { value: "vue", label: "Vue" },
-                              { value: "angular", label: "Angular" },
-                              { value: "svelte", label: "Svelte" },
-                              { value: "nextjs", label: "Next.js" },
-                              { value: "nuxt", label: "Nuxt" },
-                              { value: "remix", label: "Remix" },
-                            ].find(fw => fw.value === selectedFramework)?.label
+                            { value: "react", label: "React" },
+                            { value: "vue", label: "Vue" },
+                            { value: "angular", label: "Angular" },
+                            { value: "svelte", label: "Svelte" },
+                            { value: "nextjs", label: "Next.js" },
+                            { value: "nuxt", label: "Nuxt" },
+                            { value: "remix", label: "Remix" },
+                          ].find(fw => fw.value === selectedFramework)?.label
                           : "Select framework..."}
                         <CalendarIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
@@ -584,11 +585,10 @@ export default function ComponentsShowcase() {
                                 }}
                               >
                                 <Check
-                                  className={`mr-2 h-4 w-4 ${
-                                    selectedFramework === framework.value
+                                  className={`mr-2 h-4 w-4 ${selectedFramework === framework.value
                                       ? "opacity-100"
                                       : "opacity-0"
-                                  }`}
+                                    }`}
                                 />
                                 {framework.label}
                               </CommandItem>
