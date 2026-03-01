@@ -22,7 +22,7 @@ import PhoneMockup from "@/components/PhoneMockup";
 // Imagens do portfólio (usando as imagens já geradas)
 const RENDERIZA_IMAGES = {
   projeto1: "/images/renderizacao/render3.jpeg",
-  ideia1: "/images/renderizacao/ideia3.jpeg",
+  ideia1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia3_373ca739.jpeg",
   ideia2: "/images/renderizacao/ideia2.jpeg",
   projeto2: "/images/renderizacao/render2.jpeg",
   projeto3: "/images/renderizacao/render1.jpeg",

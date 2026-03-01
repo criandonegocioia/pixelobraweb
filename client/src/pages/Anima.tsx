@@ -37,11 +37,11 @@ const PROJECT_IMAGES: Record<number, string> = {
 };
 
 const ANIMA_VIDEOS = [
-    "/images/anima/projeto1.mp4",
-    "/images/anima/projeto2.mp4",
-    "/images/anima/projeto3.mp4",
-    "/images/anima/projeto4.mp4",
-    "/images/anima/projeto5.mp4"
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto1_be2ae4cf.mp4",
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto2_d13c148a.mp4",
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto3_f4a650cc.mp4",
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto4_a4784859.mp4",
+    "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto5_85ef1322.mp4"
 ];
 
 // Animações

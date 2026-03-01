@@ -24,7 +24,7 @@ const HUMANIZADA_IMAGES = {
   projeto1: "/images/humanizada/plantahmcl3.jpg", // Using the new image for hero
   ideia1: "/images/humanizada/plantahmsu.jpg",
   ideia2: "/images/humanizada/plantanocad.jpg",
-  esboco: "/images/humanizada/plantahmeb.jpg",
+  esboco: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/plantahmeb_650b96bb.jpg",
   projeto2: "/images/humanizada/plantahmcl1.jpg",
   projeto3: "/images/humanizada/plantahmcl2.jpg",
   ideia3: "/images/humanizada/plantahmcz.jpg",

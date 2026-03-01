@@ -21,12 +21,12 @@ import PhoneMockup from "@/components/PhoneMockup";
 
 // Imagens do portfólio (usando as imagens já geradas)
 const IMAGES = {
-    ideia1: "/images/adicao/ideia1.jpg",
-    ideia2: "/images/adicao/ideia2.jpg",
-    ideia3: "/images/adicao/ideia3.jpg",
-    projeto1: "/images/adicao/projeto1.jpg",
-    projeto2: "/images/adicao/projeto2.jpg",
-    projeto3: "/images/adicao/projeto3.jpg",
+    ideia1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia1_01798278.jpg",
+    ideia2: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia2_4ceb3523.jpg",
+    ideia3: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/ideia3_b7c57d4a.jpg",
+    projeto1: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto1_893e98f0.jpg",
+    projeto2: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto2_5e3d74cd.jpg",
+    projeto3: "https://d2xsxph8kpxj0f.cloudfront.net/310519663329410379/6BCWYzW7mGqgAm22TjZhXb/projeto3_ba9096cb.jpg",
 };
 
 const PROJECT_IMAGES: Record<number, string> = {
