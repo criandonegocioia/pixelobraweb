@@ -287,3 +287,91 @@ Retorne JSON com: "reply" (texto da resposta) e "shouldEscalate" (true se precis
     };
   }
 }
+
+
+// ─────────────────────────────────────────────
+// Agente Pixel Obra - Responses API
+// ─────────────────────────────────────────────
+// Prompt publicado: pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0 (v2)
+// Endpoint: POST /v1/responses
+
+const PROMPT_ID = "pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0";
+const PROMPT_VERSION = "2";
+
+export interface AgentResponse {
+  success: boolean;
+  reply?: string;
+  responseId?: string;
+  error?: string;
+}
+
+/**
+ * Envia uma mensagem para o agente Pixel Obra usando a Responses API.
+ * Mantém contexto conversacional via previousResponseId.
+ *
+ * @param mensagemCliente - Texto da mensagem do cliente
+ * @param previousResponseId - ID da resposta anterior para manter contexto
+ * @returns AgentResponse com a resposta humanizada do agente
+ */
+export async function agentRespond(
+  mensagemCliente: string,
+  previousResponseId?: string
+): Promise<AgentResponse> {
+  try {
+    const payload: Record<string, unknown> = {
+      prompt: {
+        id: PROMPT_ID,
+        version: PROMPT_VERSION,
+      },
+      input: mensagemCliente,
+    };
+
+    if (previousResponseId) {
+      payload.previous_response_id = previousResponseId;
+    }
+
+    const response = await fetch(`${OPENAI_API_BASE}/responses`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        success: false,
+        error: `Responses API error: ${response.status} – ${errorText}`,
+      };
+    }
+
+    const data = (await response.json()) as {
+      id: string;
+      output: Array<{
+        type: string;
+        content?: Array<{ type: string; text?: string }>;
+      }>;
+    };
+
+    let outputText = "";
+    for (const item of data.output) {
+      if (item.type === "message" && item.content) {
+        for (const content of item.content) {
+          if (content.type === "output_text" && content.text) {
+            outputText += content.text;
+          }
+        }
+      }
+    }
+
+    return {
+      success: true,
+      reply: outputText,
+      responseId: data.id,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    };
+  }
+}
