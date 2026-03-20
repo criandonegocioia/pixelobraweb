@@ -257,6 +257,25 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    target: "es2020",
+    minify: "esbuild",
+    cssMinify: true,
+    assetsInlineLimit: 4096, // inline assets < 4kb
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom"],
+          "vendor-motion": ["framer-motion"],
+          "vendor-icons": ["lucide-react"],
+          "vendor-ui": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-accordion",
+          ],
+          "vendor-query": ["@tanstack/react-query", "@trpc/react-query"],
+        },
+      },
+    },
   },
   server: {
     host: true,

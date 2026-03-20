@@ -139,6 +139,8 @@ function Logo({ className = "h-10" }: { className?: string }) {
       src={LOGO_URL}
       alt="Pixel Obra"
       className={`${className} w-auto object-contain`}
+      fetchPriority="high"
+      decoding="async"
       style={{
         filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.3))",
         maxHeight: "48px",
@@ -337,6 +339,8 @@ function HeroSection({ onOpenContact }: { onOpenContact: () => void }) {
             src={IMAGES.hero}
             alt="Arquitetura moderna"
             className="w-full h-full object-cover"
+            fetchPriority="high"
+            decoding="async"
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
@@ -572,6 +576,8 @@ function ToolsSection() {
                   src={tool.image}
                   alt={tool.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
@@ -639,6 +645,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
           src={IMAGES.amplia}
           alt="Arquitetura"
           className="w-full h-full object-cover opacity-20"
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background" />
       </div>
@@ -701,6 +709,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.render1}
                 alt={toolsT.items.render.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -708,6 +718,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.render2}
                 alt={toolsT.items.humanized.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -715,6 +727,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.solucao1}
                 alt={toolsT.items.solutions.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -722,6 +736,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.solucao2}
                 alt={toolsT.items.decoration.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -729,6 +745,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.construcao}
                 alt={toolsT.items.construction.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -736,6 +754,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.visualiza2}
                 alt={toolsT.items.visualization.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
             <div className="p-2 rounded-xl h-full" style={glassCardStyle}>
@@ -743,6 +763,8 @@ function BenefitsSection({ onOpenContact }: { onOpenContact: () => void }) {
                 src={IMAGES.visualiza3}
                 alt={toolsT.items.visualization.title}
                 className="w-full h-auto rounded-lg"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </motion.div>

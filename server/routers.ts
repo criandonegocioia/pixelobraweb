@@ -16,6 +16,7 @@ import {
   getRecentPosts,
   verifyToken,
 } from "./instagram";
+import { getLeads, getLeadStats, updateLeadStatus } from "./leads";
 
 // ─────────────────────────────────────────────
 // Schemas de validação
@@ -183,6 +184,46 @@ export const appRouter = router({
           input.accountId
         );
         return result;
+      }),
+  }),
+
+  // ─── Leads (Sales Intelligence) ─────────────
+  leads: router({
+    /**
+     * Lista leads com filtros opcionais
+     */
+    list: publicProcedure
+      .input(
+        z.object({
+          classification: z.enum(["hot", "warm", "cold"]).optional(),
+          channel: z.enum(["whatsapp", "instagram", "email"]).optional(),
+          status: z.enum(["open", "responded", "closed", "converted"]).optional(),
+        }).optional()
+      )
+      .query(async ({ input }) => {
+        return await getLeads(input ?? undefined);
+      }),
+
+    /**
+     * Estatísticas agregadas de leads
+     */
+    stats: publicProcedure.query(async () => {
+      return await getLeadStats();
+    }),
+
+    /**
+     * Atualiza o status de um lead
+     */
+    updateStatus: publicProcedure
+      .input(
+        z.object({
+          leadId: z.number(),
+          status: z.enum(["open", "responded", "closed", "converted"]),
+        })
+      )
+      .mutation(async ({ input }) => {
+        await updateLeadStatus(input.leadId, input.status);
+        return { success: true };
       }),
   }),
 });

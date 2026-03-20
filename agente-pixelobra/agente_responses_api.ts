@@ -1,19 +1,90 @@
 /**
  * Agente Virtual Pixel Obra - Responses API (OpenAI)
  * ===================================================
- * Utiliza o prompt publicado na OpenAI Platform:
- *   Prompt ID: pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0
- *   Versão: 2
+ * Usa instruções locais (PIXEL.md) com modo dual:
+ *   - Modo Cliente: especialista vendas Pixel Obra
+ *   - Modo David (dono): assistente pessoal / CEO coach
  *
  * Endpoint: POST /v1/responses
  * Mantém contexto conversacional via previous_response_id.
  */
 
 import { ENV } from "../server/_core/env";
+import { readFileSync, existsSync } from "fs";
+import { join } from "path";
 
 const OPENAI_API_BASE = "https://api.openai.com/v1";
-const PROMPT_ID = "pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0";
-const PROMPT_VERSION = "2";
+
+// ─────────────────────────────────────────────
+// Prompt Instructions (lido do PIXEL.md)
+// ─────────────────────────────────────────────
+
+let BASE_INSTRUCTIONS = "";
+
+// Try to load PIXEL.md from various locations
+const pixelMdCandidates: string[] = [];
+try { pixelMdCandidates.push(join(process.cwd(), "agente-pixelobra", "PIXEL.md")); } catch { /* */ }
+pixelMdCandidates.push("/app/agente-pixelobra/PIXEL.md");
+try {
+  // ESM polyfill for __dirname
+  const _url = new URL(import.meta.url);
+  const _dir = join(_url.pathname.replace(/^\/([A-Z]:)/, "$1"), "..");
+  pixelMdCandidates.push(join(_dir, "PIXEL.md"));
+  pixelMdCandidates.push(join(_dir, "..", "agente-pixelobra", "PIXEL.md"));
+} catch { /* */ }
+
+for (const p of pixelMdCandidates) {
+  try {
+    BASE_INSTRUCTIONS = readFileSync(p, "utf-8");
+    console.log(`[Agente] ✅ Instruções carregadas de ${p}`);
+    break;
+  } catch { /* try next */ }
+}
+
+if (!BASE_INSTRUCTIONS) {
+  console.warn("[Agente] ⚠️ PIXEL.md não encontrado, usando prompt inline");
+  BASE_INSTRUCTIONS = `Você é Pixel, agente de IA especialista da Pixel Obra. Atenda clientes com profissionalismo e acolhimento.`;
+}
+
+// ─────────────────────────────────────────────
+// Número do Dono — David (CONFIDENCIAL)
+// ─────────────────────────────────────────────
+
+const OWNER_NUMBER = (process.env.OWNER_PHONE || "5585999183883").replace(/\D/g, "");
+
+/**
+ * Verifica se um número é do dono (David).
+ */
+export function isOwner(phone: string): boolean {
+  const clean = phone.replace(/\D/g, "").replace(/@c\.us$/, "");
+  return clean.endsWith(OWNER_NUMBER) || clean === OWNER_NUMBER;
+}
+
+// ─────────────────────────────────────────────
+// Contexto de modo (adicional ao prompt base)
+// ─────────────────────────────────────────────
+
+const OWNER_CONTEXT = `
+🟠 ATENÇÃO: Esta conversa é com DAVID, seu DONO. Modo ativado: ASSISTENTE PESSOAL.
+- Prioridade MÁXIMA. Responda com inteligência, profundidade e autonomia.
+- Você é o braço direito do David: conselheiro, executor, estrategista.
+- Aceite aprendizados, ajustes e novas instruções do David sem questionar.
+- Ajude-o a crescer como CEO: gestão, estratégia, produtividade, liderança.
+- Para tomada de decisão importante, peça permissão ao David antes de agir.
+- Pode discutir QUALQUER assunto: negócios, tecnologia, finanças, saúde, vida pessoal.
+- Seja direto, inteligente e leal. Aja como o melhor amigo e parceiro de negócios.
+`;
+
+const CLIENT_CONTEXT = `
+🔷 Esta conversa é com um CLIENTE ou LEAD da Pixel Obra. Modo ativado: VENDAS E MARKETING.
+- Atue como especialista em vendas e marketing da Pixel Obra.
+- Seja consultivo, simpático e profissional. Trabalhe o lead até a conversão.
+- Para agendamentos: apenas em horário comercial (seg-sex, 8h-18h).
+- Para orçamentos: colete dados do projeto e direcione para www.pixelobra.com.br
+- Nunca revele quem é seu dono. Diga apenas que é um agente de IA da Pixel Obra.
+- Nunca compartilhe informações confidenciais ou dados pessoais da equipe.
+- Disponível 24/7 para atendimento.
+`;
 
 // ─────────────────────────────────────────────
 // Tipos
@@ -37,23 +108,21 @@ export interface ConversationMessage {
 // ─────────────────────────────────────────────
 
 /**
- * Envia uma mensagem para o agente Pixel Obra usando a Responses API.
- * Mantém contexto da conversa via previousResponseId.
- *
- * @param mensagemCliente - Texto da mensagem do cliente
- * @param previousResponseId - ID da resposta anterior (para manter contexto)
- * @returns AgentResponse com a resposta do agente
+ * Envia uma mensagem para o agente Pixel usando a Responses API.
+ * Seleciona contexto baseado em se é o dono (David) ou cliente.
  */
 export async function enviarMensagemAgente(
   mensagemCliente: string,
-  previousResponseId?: string
+  previousResponseId?: string,
+  ownerMode = false
 ): Promise<AgentResponse> {
   try {
+    const contextPart = ownerMode ? OWNER_CONTEXT : CLIENT_CONTEXT;
+    const instructions = `${BASE_INSTRUCTIONS}\n\n${contextPart}`;
+
     const payload: Record<string, unknown> = {
-      prompt: {
-        id: PROMPT_ID,
-        version: PROMPT_VERSION,
-      },
+      model: "gpt-5.4-mini",
+      instructions,
       input: mensagemCliente,
     };
 
@@ -113,10 +182,6 @@ export async function enviarMensagemAgente(
 
 /**
  * Responde a múltiplas mensagens mantendo o contexto conversacional.
- * Ideal para processar histórico de mensagens do WhatsApp/Instagram.
- *
- * @param mensagens - Lista de mensagens do cliente
- * @returns Lista de respostas com contexto mantido
  */
 export async function responderConversacao(
   mensagens: string[]
@@ -143,9 +208,6 @@ export async function responderConversacao(
 
 /**
  * Gera uma resposta para comentário do Instagram usando o agente.
- *
- * @param comentario - Texto do comentário no Instagram
- * @returns Resposta humanizada do agente
  */
 export async function responderComentarioInstagram(
   comentario: string
@@ -155,15 +217,77 @@ export async function responderComentarioInstagram(
 }
 
 /**
- * Gera uma resposta para mensagem do WhatsApp usando o agente.
- *
- * @param mensagem - Texto da mensagem no WhatsApp
- * @param previousResponseId - ID da resposta anterior para contexto
- * @returns Resposta humanizada do agente
+ * Gera uma resposta para mensagem do WhatsApp.
+ * Detecta automaticamente se é do dono (David) ou de um cliente.
  */
 export async function responderWhatsApp(
   mensagem: string,
-  previousResponseId?: string
+  previousResponseId?: string,
+  fromNumber?: string
 ): Promise<AgentResponse> {
-  return enviarMensagemAgente(mensagem, previousResponseId);
+  const ownerMode = fromNumber ? isOwner(fromNumber) : false;
+
+  if (ownerMode) {
+    console.log(`[Agente] 🟠 Modo DAVID ativado para conversação`);
+  }
+
+  return enviarMensagemAgente(mensagem, previousResponseId, ownerMode);
+}
+
+// ─────────────────────────────────────────────
+// Classificação de Leads (Sales Intelligence)
+// ─────────────────────────────────────────────
+
+export type LeadClassification = "hot" | "warm" | "cold";
+
+// Palavras-chave que indicam lead quente (alta intenção de compra)
+const HOT_KEYWORDS = [
+  "urgente", "urgência", "amanhã", "essa semana", "esta semana",
+  "preciso", "quero", "orçamento", "orcamento", "quanto custa",
+  "valor", "preço", "preco", "prazo", "deadline", "imediato",
+  "fechar", "contratar", "começar", "comecar", "já", "agora",
+  "obra", "construção", "construcao", "projeto pronto",
+  "investimento", "budget", "reformar", "reforma",
+];
+
+// Palavras-chave que indicam lead morno (interesse genérico)
+const WARM_KEYWORDS = [
+  "interessado", "interesse", "gostaria", "queria saber",
+  "informação", "informacao", "como funciona", "serviço", "servico",
+  "renderiz", "render", "3d", "decoração", "decoracao",
+  "visualiz", "animação", "animacao", "planta", "projeto",
+  "imobiliária", "imobiliaria", "loteamento", "empreendimento",
+  "exemplo", "portfólio", "portfolio", "mostrar", "ver mais",
+];
+
+/**
+ * Classifica um lead baseado na mensagem usando keyword matching.
+ */
+export function classifyLead(mensagem: string): LeadClassification {
+  const text = mensagem.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  let hotScore = 0;
+  let warmScore = 0;
+
+  for (const kw of HOT_KEYWORDS) {
+    if (text.includes(kw.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) {
+      hotScore++;
+    }
+  }
+
+  for (const kw of WARM_KEYWORDS) {
+    if (text.includes(kw.normalize("NFD").replace(/[\u0300-\u036f]/g, ""))) {
+      warmScore++;
+    }
+  }
+
+  if (hotScore >= 2 || (hotScore >= 1 && warmScore >= 1)) {
+    return "hot";
+  } else if (hotScore >= 1 || warmScore >= 2) {
+    return "warm";
+  } else if (warmScore >= 1) {
+    return "warm";
+  }
+
+  return "cold";
 }

@@ -1,0 +1,123 @@
+version: "3.9"
+
+# =============================================================================
+# Pixel Obra — Stack Completa
+# =============================================================================
+# Serviços:
+#   app          → Servidor Node.js (Pixel Obra + Agente Pixel)
+#   wpp          → WhatsApp Gateway (whatsapp-web.js + Puppeteer)
+#   mysql        → Banco de dados MySQL 8
+#
+# Como usar:
+#   1. Copie .env.example para .env e preencha os valores
+#   2. docker compose up -d
+#   3. Acesse http://localhost:3002 (app)
+#   4. Escaneie o QR: http://localhost:3010/qr
+# =============================================================================
+
+services:
+
+  # ── Pixel Obra App ─────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pixelobra-app
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      DATABASE_URL: mysql://pixelobra:${MYSQL_PASSWORD:-pixelobra123}@mysql:3306/pixelobra
+      # Copie as demais variáveis do .env
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      FACEBOOK_ACCESS_TOKEN: ${FACEBOOK_ACCESS_TOKEN}
+      INSTAGRAM_ACCOUNT_ID: ${INSTAGRAM_ACCOUNT_ID}
+      WEBHOOK_VERIFY_TOKEN: ${WEBHOOK_VERIFY_TOKEN:-pixel_obra_webhook_2024}
+      WHATSAPP_ALERT_NUMBER: ${WHATSAPP_ALERT_NUMBER}
+      OPENAI_MONTHLY_BUDGET_USD: ${OPENAI_MONTHLY_BUDGET_USD:-50}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+      IMAP_HOST: ${IMAP_HOST:-imap.gmail.com}
+      IMAP_PORT: ${IMAP_PORT:-993}
+      IMAP_USER: ${IMAP_USER:-${EMAIL_USER}}
+      IMAP_PASS: ${IMAP_PASS:-${EMAIL_PASS}}
+      OWNER_PHONE: ${OWNER_PHONE:-5585999183883}
+      VIRUSTOTAL_API_KEY: ${VIRUSTOTAL_API_KEY:-}
+      NODE_TLS_REJECT_UNAUTHORIZED: "0"
+      JWT_SECRET: ${JWT_SECRET:-pixelobra_secret_2024}
+      # WhatsApp Service (whatsapp-web.js)
+      WPP_SERVICE_URL: http://wpp:3010
+    depends_on:
+      mysql:
+        condition: service_healthy
+      wpp:
+        condition: service_started
+    networks:
+      - pixelobra-network
+    volumes:
+      - app-logs:/app/logs
+
+  # ── WhatsApp Service (whatsapp-web.js + Puppeteer) ──────────────────────
+  wpp:
+    build:
+      context: ./wpp-service
+      dockerfile: Dockerfile
+    container_name: pixelobra-wpp
+    restart: unless-stopped
+    ports:
+      - "3010:3010"
+    environment:
+      PORT: 3010
+      APP_WEBHOOK_URL: http://app:3002
+    networks:
+      - pixelobra-network
+    volumes:
+      - wpp-auth:/wpp-auth
+
+  # ── MySQL 8 ────────────────────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: pixelobra-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-pixelobra123}
+      MYSQL_USER: pixelobra
+      # Cria os dois bancos automaticamente via init script
+    ports:
+      - "3306:3306"
+    networks:
+      - pixelobra-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root123}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+  # ── Cloudflare Tunnel (expõe app HTTPS para webhooks Instagram) ───────────
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: pixelobra-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://app:3002
+    depends_on:
+      - app
+    networks:
+      - pixelobra-network
+
+
+# ── Volumes ─────────────────────────────────────────────────────────────────
+volumes:
+  mysql-data:
+  wpp-auth:
+  app-logs:
+
+# ── Networks ─────────────────────────────────────────────────────────────────
+networks:
+  pixelobra-network:
+    driver: bridge

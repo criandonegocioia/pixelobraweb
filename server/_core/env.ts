@@ -14,4 +14,13 @@ export const ENV = {
   // Facebook / Instagram
   facebookAccessToken: process.env.FACEBOOK_ACCESS_TOKEN ?? "",
   instagramAccountId: process.env.INSTAGRAM_ACCOUNT_ID ?? "",
+  // Webhooks
+  webhookVerifyToken: process.env.WEBHOOK_VERIFY_TOKEN ?? "pixel_obra_webhook_2024",
+  // WhatsApp Alerts (número para receber alertas do sistema)
+  whatsappAlertNumber: process.env.WHATSAPP_ALERT_NUMBER ?? "",
+  // IMAP (Monitor de E-mails de Proposta)
+  imapHost: process.env.IMAP_HOST ?? "imap.gmail.com",
+  imapPort: parseInt(process.env.IMAP_PORT ?? "993", 10),
+  imapUser: process.env.IMAP_USER ?? process.env.EMAIL_USER ?? "",
+  imapPass: process.env.IMAP_PASS ?? process.env.EMAIL_PASS ?? "",
 };

@@ -44,7 +44,7 @@ export async function chatCompletion(
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-5.4-mini",
         messages: allMessages,
         max_tokens: 1024,
         temperature: 0.7,
@@ -96,7 +96,7 @@ export async function analyzeImage(
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-5.4-mini",
         messages: [
           {
             role: "system",
@@ -168,7 +168,7 @@ Retorne em formato JSON com os campos: "caption" (legenda principal) e "hashtags
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-5.4-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -250,7 +250,7 @@ Retorne JSON com: "reply" (texto da resposta) e "shouldEscalate" (true se precis
       method: "POST",
       headers: getHeaders(),
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-5.4-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: customerMessage },
@@ -292,11 +292,11 @@ Retorne JSON com: "reply" (texto da resposta) e "shouldEscalate" (true se precis
 // ─────────────────────────────────────────────
 // Agente Pixel Obra - Responses API
 // ─────────────────────────────────────────────
-// Prompt publicado: pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0 (v2)
+// Prompt publicado: pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0 (v6)
 // Endpoint: POST /v1/responses
 
 const PROMPT_ID = "pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0";
-const PROMPT_VERSION = "2";
+const PROMPT_VERSION = "6";
 
 export interface AgentResponse {
   success: boolean;

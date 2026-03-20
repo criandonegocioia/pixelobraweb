@@ -299,3 +299,106 @@ export async function verifyToken(): Promise<TokenVerifyResult> {
     };
   }
 }
+// ─────────────────────────────────────────────
+// Reply to Instagram Comment
+// ─────────────────────────────────────────────
+
+export interface ReplyResult {
+  success: boolean;
+  replyId?: string;
+  error?: string;
+}
+
+/**
+ * Replies to an Instagram comment with a given message.
+ * Uses the Instagram Graph API `/{comment_id}/replies` endpoint.
+ */
+export async function replyToComment(
+  commentId: string,
+  message: string
+): Promise<ReplyResult> {
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: "Token do Facebook não configurado" };
+    }
+
+    const url = `${GRAPH_API_BASE}/${commentId}/replies`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        access_token: token,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return { success: false, error: `Erro ao responder comentário: ${errorText}` };
+    }
+
+    const data = (await response.json()) as { id: string };
+    return { success: true, replyId: data.id };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    };
+  }
+}
+
+// ─────────────────────────────────────────────
+// Send Direct Message (Instagram Messaging API)
+// ─────────────────────────────────────────────
+
+export interface DMResult {
+  success: boolean;
+  messageId?: string;
+  error?: string;
+}
+
+/**
+ * Sends a direct message to an Instagram user.
+ * Requires the instagram_manage_messages permission.
+ */
+export async function sendDM(
+  recipientId: string,
+  message: string
+): Promise<DMResult> {
+  try {
+    const token = getToken();
+    if (!token) {
+      return { success: false, error: "Token do Facebook não configurado" };
+    }
+
+    const igAccountId = getAccountId();
+    if (!igAccountId) {
+      return { success: false, error: "ID da conta do Instagram não configurado" };
+    }
+
+    const url = `${GRAPH_API_BASE}/${igAccountId}/messages`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        recipient: { id: recipientId },
+        message: { text: message },
+        access_token: token,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return { success: false, error: `Erro ao enviar DM: ${errorText}` };
+    }
+
+    const data = (await response.json()) as { message_id?: string; id?: string };
+    return { success: true, messageId: data.message_id || data.id };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Erro desconhecido",
+    };
+  }
+}

@@ -23,6 +23,7 @@ import PoliticaPrivacidade from "./pages/PoliticaPrivacidade";
 import TermosServico from "./pages/TermosServico";
 import PoliticaCookies from "./pages/PoliticaCookies";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -45,6 +46,7 @@ function Router() {
       <Route path={"/termos-de-servico"} component={TermosServico} />
       <Route path={"/politica-de-cookies"} component={PoliticaCookies} />
       <Route path={"/login"} component={Login} />
+      <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
