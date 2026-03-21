@@ -1,13 +1,33 @@
 # Agente Virtual Pixel Obra
 
-Agente conversacional da Pixel Obra utilizando a **Responses API** da OpenAI com prompt publicado na plataforma.
+Agente conversacional da Pixel Obra para atendimento humanizado via **WhatsApp** e **Instagram**.
 
-## Configuração do Prompt
+## Arquitetura
+
+O agente Pixel opera em dois modos:
+
+### 1. OpenClaw Gateway (Primário — WhatsApp)
+
+As mensagens do WhatsApp são roteadas pelo **OpenClaw Gateway** usando a API `/v1/chat/completions` (formato OpenAI-compatible), que traduz para **Claude Sonnet 4** (Anthropic).
+
+| Campo | Valor |
+|-------|-------|
+| **Gateway** | `http://host.docker.internal:3000` |
+| **Token** | Configurável via `OPENCLAW_TOKEN` |
+| **Modelo** | `claude-sonnet-4-20250514` (via alias `gpt-4o-mini`) |
+| **System Prompt** | `PIXEL.md` (persona + regras + fluxo de atendimento) |
+
+**Fluxo:**
+```
+WhatsApp → wpp-service → POST /api/whatsapp/message → OpenClaw Gateway → Claude Sonnet 4 → resposta
+```
+
+### 2. OpenAI Responses API (Fallback — Instagram)
 
 | Campo | Valor |
 |-------|-------|
 | **Prompt ID** | `pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0` |
-| **Versão** | `2` |
+| **Versão** | `6` |
 | **Endpoint** | `POST /v1/responses` |
 | **Modelo** | Configurado no prompt (gpt-4o / gpt-4.1) |
 
@@ -15,50 +35,34 @@ Agente conversacional da Pixel Obra utilizando a **Responses API** da OpenAI com
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `agente_responses_api.py` | Agente standalone em Python com conversa interativa no terminal |
-| `agente_responses_api.ts` | Módulo TypeScript para integração com o servidor web (tRPC) |
-| `demo_teste.py` | Script de demonstração e teste do agente |
+| `PIXEL.md` | System prompt do agente: persona, serviços, fluxo, regras |
+| `agente_responses_api.ts` | Módulo TypeScript — OpenAI Responses API (fallback) |
+| `agente_responses_api.py` | Agente standalone Python (terminal interativo) |
+| `demo_teste.py` | Script de demonstração e teste |
 
-## Como Usar
+## System Prompt (PIXEL.md)
 
-### Python (Standalone)
+O arquivo `PIXEL.md` define a persona completa do agente:
 
-```bash
-export OPENAI_API_KEY="sua-chave-aqui"
-python agente_responses_api.py
-```
+- **Nome:** Pixel
+- **Tom:** Profissional, acolhedor, direto, simpático, humanizado
+- **Idioma:** Português brasileiro (natural)
+- **Serviços:** Renderização com IA, Visualização 3D, Decoração Virtual, Ampliação, Edição, Animações, Soluções por Nicho
+- **Fluxo:** Saudação → Entender projeto → Apresentar serviços → Qualificar lead → Direcionar orçamento
 
-O agente inicia uma conversa interativa no terminal. Digite suas mensagens e receba respostas humanizadas da Pixel Obra.
+## Uso
 
-### TypeScript (Integração com Servidor)
+### WhatsApp (via OpenClaw)
 
-```typescript
-import { enviarMensagemAgente, responderConversacao } from "./agente-pixelobra/agente_responses_api";
-
-// Mensagem única
-const resposta = await enviarMensagemAgente("Olá, quero saber sobre renderização");
-
-// Conversa com contexto
-const respostas = await responderConversacao([
-  "Olá",
-  "Quem é vocês?",
-  "Quanto custa uma renderização?"
-]);
-```
-
-### Integração com WhatsApp
+O roteamento é feito automaticamente pelo handler em `server/_core/index.ts`:
 
 ```typescript
-import { responderWhatsApp } from "./agente-pixelobra/agente_responses_api";
-
-let previousId: string | undefined;
-
-// Cada mensagem recebida do cliente
-const resultado = await responderWhatsApp(mensagemCliente, previousId);
-previousId = resultado.responseId; // Manter contexto
+// POST /api/whatsapp/message
+// → OpenClaw Gateway /v1/chat/completions
+// → System prompt PIXEL.md + histórico de conversa
 ```
 
-### Integração com Instagram
+### Instagram (via OpenAI Responses API)
 
 ```typescript
 import { responderComentarioInstagram } from "./agente-pixelobra/agente_responses_api";
@@ -67,21 +71,20 @@ const resposta = await responderComentarioInstagram("Que lindo esse projeto!");
 // resposta.reply -> "Muito obrigado! 😊 Ficamos felizes..."
 ```
 
+### Python (Standalone)
+
+```bash
+export OPENAI_API_KEY="sua-chave-aqui"
+python agente_responses_api.py
+```
+
 ## Contexto Conversacional
 
-O agente mantém o contexto da conversa através do campo `previous_response_id` da Responses API. Isso significa que cada resposta leva em consideração todas as mensagens anteriores da conversa, proporcionando uma experiência natural e humanizada.
+- **WhatsApp:** Memória in-memory (últimas 20 mensagens por usuário) via `conversationHistory` Map
+- **Instagram:** Contexto via `previous_response_id` da Responses API
+- **DB:** Tabela `conversation_sessions` para persistência entre reinícios
 
-## Prompt Publicado
+## Links
 
-O prompt está publicado na OpenAI Platform e contém:
-
-- **Persona**: Assistente virtual oficial da Pixel Obra
-- **Serviços**: Renderização com IA, Edição, Animações, Audiovisual, Soluções por Nicho
-- **Canais**: Site, Instagram, Email, WhatsApp
-- **Diretrizes**: Atendimento humanizado, fluxo de orçamentos, regras de segurança
-- **Tom de voz**: Profissional, acolhedor, direto
-
-Para atualizar o prompt, acesse:
-```
-https://platform.openai.com/chat/edit?prompt=pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0
-```
+- **Prompt na OpenAI Platform:** https://platform.openai.com/chat/edit?prompt=pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0
+- **OpenClaw Gateway:** http://localhost:3000

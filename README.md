@@ -1,21 +1,24 @@
-# Pixel Obra — Site Institucional
+# Pixel Obra — Plataforma Web + Agente WhatsApp
 
-> Plataforma web institucional da **Pixel Obra**, empresa especializada em visualização arquitetônica com IA. O site apresenta os serviços de renderização, animação, decoração e modelagem 3D com foco em imóveis e projetos de arquitetura.
+> Plataforma web institucional + agente comercial da **Pixel Obra**, empresa especializada em visualização arquitetônica com IA. Inclui site institucional, agente virtual "Pixel" para WhatsApp e Instagram, e integração com **OpenClaw** para respostas humanizadas via Claude Sonnet 4.
 
 ---
 
 ## Sumário
 
 - [Visão Geral](#visão-geral)
+- [Arquitetura](#arquitetura)
 - [Tecnologias](#tecnologias)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Páginas e Rotas](#páginas-e-rotas)
 - [Backend (API)](#backend-api)
+- [WhatsApp — Agente Pixel](#whatsapp--agente-pixel)
 - [Banco de Dados](#banco-de-dados)
 - [Autenticação](#autenticação)
 - [Inteligência Artificial](#inteligência-artificial)
 - [Armazenamento](#armazenamento)
 - [E-mail](#e-mail)
+- [Docker](#docker)
 - [Variáveis de Ambiente](#variáveis-de-ambiente)
 - [Como Rodar](#como-rodar)
 - [Scripts Disponíveis](#scripts-disponíveis)
@@ -25,14 +28,40 @@
 
 ## Visão Geral
 
-O **Pixel Obra Web** é um site institucional full-stack construído em TypeScript com React no frontend e Express no backend. O sistema oferece:
+O **Pixel Obra Web** é uma plataforma full-stack construída em TypeScript com React no frontend e Express no backend, com deploy via **Docker Compose**. O sistema oferece:
 
 - Página institucional com apresentação dos serviços de IA para arquitetura
+- **Agente virtual "Pixel" no WhatsApp** — atendimento humanizado via OpenClaw (Claude Sonnet 4)
 - Formulário de contato com envio de e-mail automático
+- Webhook de Instagram para resposta automática a comentários e DMs
 - Autenticação OAuth com gestão de sessão via JWT
-- Integração com LLM (Gemini 2.5 Flash) para funcionalidades de IA
 - Banco de dados MySQL gerenciado via Drizzle ORM
 - Design Glassmorphism Arquitetônico (tema escuro com acentos em cyan `#00D4FF`)
+
+---
+
+## Arquitetura
+
+```
+Usuário WhatsApp
+    ↓ mensagem
+wpp-service (porta 3010) — whatsapp-web.js + Puppeteer
+    ↓ POST /api/whatsapp/message
+pixelobra-app (porta 3002) — Express + tRPC
+    ↓ POST /v1/chat/completions
+OpenClaw Gateway (porta 3000) → Claude Sonnet 4
+    ↓ resposta humanizada
+pixelobra-app → wpp-service → Usuário WhatsApp
+```
+
+### Containers Docker
+
+| Container | Porta | Descrição |
+|-----------|-------|-----------|
+| `pixelobra-app` | 3002 | App principal (Node 22, Vite, Express) |
+| `pixelobra-wpp` | 3010 | WhatsApp gateway (whatsapp-web.js) |
+| `pixelobra-mysql` | 3306 | MySQL 8 — banco de dados |
+| `pixelobra-tunnel` | — | Cloudflare Tunnel (HTTPS para webhooks) |
 
 ---
 
@@ -93,40 +122,35 @@ pixelobraweb/
 │   ├── routers.ts            # tRPC router raiz (auth + contact)
 │   ├── db.ts                 # Conexão MySQL + funções de usuário
 │   ├── email.ts              # Envio de e-mail via Gmail SMTP
+│   ├── memory.ts             # Memória de conversa persistente (DB)
+│   ├── webhooks.ts           # Webhook handler Instagram
+│   ├── whatsapp-alert.ts     # Alertas via WhatsApp (token, créditos)
 │   ├── storage.ts            # Upload/download de arquivos
-│   └── _core/               # Infraestrutura interna do servidor
-│       ├── index.ts          # Bootstrap do servidor Express
-│       ├── context.ts        # Contexto tRPC (req, res, user)
-│       ├── cookies.ts        # Helpers para cookies de sessão
-│       ├── dataApi.ts        # API de dados interna
+│   └── _core/
+│       ├── index.ts          # Bootstrap Express + rota WhatsApp → OpenClaw
 │       ├── env.ts            # Variáveis de ambiente centralizadas
-│       ├── imageGeneration.ts# Geração de imagens via IA
 │       ├── llm.ts            # Abstração para chamadas ao LLM
-│       ├── map.ts            # Integração com Google Maps
-│       ├── notification.ts   # Sistema de notificações
-│       ├── oauth.ts          # Fluxo OAuth
-│       ├── sdk.ts            # SDK de autenticação (JWT + OAuth)
-│       ├── systemRouter.ts   # Rotas do sistema (OAuth callback)
-│       ├── trpc.ts           # Configuração tRPC (router, procedure)
-│       ├── vite.ts           # Middleware Vite para desenvolvimento
-│       └── voiceTranscription.ts # Transcrição de voz
+│       └── ...               # context, cookies, oauth, trpc, vite, etc.
+│
+├── agente-pixelobra/         # Agente Virtual Pixel
+│   ├── PIXEL.md              # System prompt do agente (persona + regras)
+│   ├── agente_responses_api.ts # OpenAI Responses API (fallback)
+│   └── README.md             # Documentação do agente
+│
+├── wpp-service/              # Micro-serviço WhatsApp
+│   ├── server.js             # whatsapp-web.js + handler de mensagens
+│   ├── Dockerfile            # Build com Chromium + Puppeteer
+│   └── package.json
 │
 ├── drizzle/                  # Banco de dados
-│   ├── schema.ts             # Definição das tabelas
-│   ├── relations.ts          # Relações entre tabelas
+│   ├── schema.ts             # Tabelas: users, conversation_sessions
 │   └── migrations/           # Migrações SQL geradas
 │
 ├── shared/                   # Código compartilhado (client + server)
-│   ├── const.ts              # Constantes compartilhadas (cookie name, timeouts)
-│   ├── types.ts              # Tipos compartilhados
-│   └── _core/               # Utilitários core compartilhados (errors, etc.)
-│
-├── api/                      # Handler Vercel (deploy serverless)
-├── patches/                  # Patches de dependências (wouter)
-├── vite.config.ts            # Configuração Vite
-├── drizzle.config.ts         # Configuração Drizzle Kit
-├── tsconfig.json             # Configuração TypeScript
+├── docker-compose.yml        # Stack completa (app + wpp + mysql + tunnel)
+├── Dockerfile                # Build do app (multi-stage Node 22)
 ├── .env                      # Variáveis de ambiente (não commitado)
+├── .env.example              # Template de variáveis
 └── package.json              # Dependências e scripts
 ```
 
@@ -212,6 +236,44 @@ Router interno para callbacks OAuth e funcionalidades do sistema.
 
 ---
 
+## WhatsApp — Agente Pixel
+
+O agente **Pixel** atende clientes via WhatsApp com respostas humanizadas geradas pelo **OpenClaw** (Claude Sonnet 4).
+
+### Componentes
+
+| Componente | Arquivo | Descrição |
+|---|---|---|
+| wpp-service | `wpp-service/server.js` | Micro-serviço WhatsApp (whatsapp-web.js + Puppeteer) |
+| Handler | `server/_core/index.ts` | Rota `POST /api/whatsapp/message` → OpenClaw |
+| System Prompt | `agente-pixelobra/PIXEL.md` | Persona, serviços, fluxo de atendimento |
+| Memória | `server/memory.ts` | Persistência de conversa (DB) |
+| Alertas | `server/whatsapp-alert.ts` | Notificações do sistema para o dono |
+
+### Fluxo de Mensagen
+
+1. Mensagem chega no WhatsApp → `wpp-service` captura via `client.on('message')`
+2. `wpp-service` faz `POST /api/whatsapp/message` no app com `{ from, body }`
+3. App envia para OpenClaw Gateway (`POST /v1/chat/completions`) com system prompt Pixel Obra
+4. OpenClaw processa via Claude Sonnet 4 e retorna resposta humanizada
+5. App retorna `{ reply }` → `wpp-service` envia de volta via WhatsApp
+
+### Endpoints wpp-service
+
+| Endpoint | Método | Descrição |
+|---|---|---|
+| `/qr` | GET | Página HTML com QR code para conectar |
+| `/status` | GET | Status da conexão (`{ status, ready }`) |
+| `/send` | POST | Enviar mensagem (`{ number, text }`) |
+
+### OpenClaw Gateway
+
+- **URL:** `http://host.docker.internal:3000` (dentro Docker)
+- **Token:** configurável via `OPENCLAW_TOKEN`
+- **Modelo:** Claude Sonnet 4 (via `gpt-4o-mini` — gateway traduz)
+
+---
+
 ## Banco de Dados
 
 - **SGBD**: MySQL
@@ -231,6 +293,17 @@ Router interno para callbacks OAuth e funcionalidades do sistema.
 | `createdAt` | TIMESTAMP | Data de criação |
 | `updatedAt` | TIMESTAMP | Data de atualização |
 | `lastSignedIn` | TIMESTAMP | Último acesso |
+
+### Tabela: `conversation_sessions`
+
+| Coluna | Tipo | Descrição |
+|---|---|---|
+| `id` | INT (PK, auto) | Chave primária |
+| `contact` | VARCHAR(128) | Identificador do contato (telefone/user ID) |
+| `channel` | ENUM('whatsapp','instagram','email') | Canal de comunicação |
+| `previousResponseId` | VARCHAR(128) | ID da última resposta OpenAI (contexto) |
+| `createdAt` | TIMESTAMP | Data de criação |
+| `updatedAt` | TIMESTAMP | Data de atualização (auto-update) |
 
 > O usuário definido em `OWNER_OPEN_ID` recebe automaticamente o papel `admin`.
 
@@ -261,17 +334,30 @@ O sistema usa **OAuth** com gestão de sessão via **JWT (HS256)**.
 
 ## Inteligência Artificial
 
+### Agente Pixel (WhatsApp/Instagram)
+
+- **Provider**: OpenClaw Gateway → Anthropic Claude Sonnet 4
+- **Endpoint**: `POST /v1/chat/completions` (OpenAI-compatible)
+- **System prompt**: `agente-pixelobra/PIXEL.md`
+- **Memória**: In-memory (20 mensagens por usuário) + DB (`conversation_sessions`)
+
+### LLM Genérico (Site/Frontend)
+
 O servidor possui uma camada de abstração para chamadas LLM em `server/_core/llm.ts`.
 
 - **Modelo padrão**: `gemini-2.5-flash`
 - **Provider**: Forge API (proxy compatível com OpenAI)
 - **Max tokens**: 32.768
-- **Thinking budget**: 128 tokens
+
+### OpenAI Responses API (Fallback)
+
+- **Prompt ID**: `pmpt_69b9a649cc048193a36e2bc324eeebc20fb7cdce53a9b9a0`
+- **Versão**: `6`
+- **Arquivo**: `agente-pixelobra/agente_responses_api.ts`
 
 ### Capacidades
 - Mensagens com texto, imagens e arquivos (audio, PDF, vídeo)
 - Function calling / tool use
-- Structured output (JSON Schema)
 - Geração de imagens (`imageGeneration.ts`)
 - Transcrição de voz (`voiceTranscription.ts`)
 
@@ -306,31 +392,40 @@ Envio de e-mails via **Nodemailer** com Gmail SMTP (porta 465, SSL).
 
 ## Variáveis de Ambiente
 
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+Copie `.env.example` para `.env` e preencha:
 
 ```env
-# Aplicação
-VITE_APP_ID=            # ID da aplicação OAuth
-JWT_SECRET=             # Segredo para assinar JWTs de sessão
+# ── App ───────────────────────────────────────
+PORT=3000
+NODE_ENV=production
+JWT_SECRET=troque_por_uma_chave_segura
 
-# Banco de Dados
-DATABASE_URL=           # String de conexão MySQL (ex: mysql://user:pass@host:3306/db)
+# ── OpenAI ────────────────────────────────────
+OPENAI_API_KEY=
+OPENAI_MONTHLY_BUDGET_USD=50
 
-# OAuth
-OAUTH_SERVER_URL=       # URL base do servidor OAuth
-OWNER_OPEN_ID=          # OpenId do usuário administrador
+# ── OpenClaw Gateway ──────────────────────────
+OPENCLAW_URL=http://host.docker.internal:3000
+OPENCLAW_TOKEN=123456
 
-# IA / LLM
-BUILT_IN_FORGE_API_URL= # URL base da Forge API (proxy LLM)
-BUILT_IN_FORGE_API_KEY= # Chave de API da Forge (OPENAI_API_KEY)
+# ── Facebook / Instagram ──────────────────────
+FACEBOOK_ACCESS_TOKEN=
+INSTAGRAM_ACCOUNT_ID=
+WEBHOOK_VERIFY_TOKEN=pixel_obra_webhook_2024
 
-# E-mail
-EMAIL_USER=             # Endereço Gmail para envio
-EMAIL_PASS=             # Senha de app do Gmail (não a senha normal)
+# ── WhatsApp ──────────────────────────────────
+WHATSAPP_ALERT_NUMBER=+55XXXXXXXXXXX
+OWNER_PHONE=5585999183883
 
-# Ambiente
-NODE_ENV=development    # development | production
-PORT=3000               # Porta do servidor (padrão: 3000)
+# ── Email / IMAP ─────────────────────────────
+EMAIL_USER=
+EMAIL_PASS=
+IMAP_HOST=imap.gmail.com
+IMAP_PORT=993
+
+# ── MySQL (auto pelo docker-compose) ─────────
+MYSQL_ROOT_PASSWORD=root123
+MYSQL_PASSWORD=pixelobra123
 ```
 
 ---
@@ -339,45 +434,50 @@ PORT=3000               # Porta do servidor (padrão: 3000)
 
 ### Pré-requisitos
 
-- Node.js 20+
-- pnpm 10+ (`npm install -g pnpm`)
-- MySQL 8+ (ou banco configurado via `DATABASE_URL`)
+- Docker Desktop
+- OpenClaw rodando na porta 3000 (para agente WhatsApp)
 
-### Instalação
+### Via Docker (Recomendado)
+
+```bash
+# 1. Copiar variáveis de ambiente
+cp .env.example .env
+# Preencher os valores no .env
+
+# 2. Subir toda a stack
+docker compose up -d
+
+# 3. Acessar
+# App: http://localhost:3002
+# QR WhatsApp: http://localhost:3010/qr
+```
+
+### Desenvolvimento Local
 
 ```bash
 pnpm install
-```
-
-### Desenvolvimento
-
-```bash
 pnpm dev
+# Acesse http://localhost:3000
 ```
 
-O servidor Express e o Vite HMR sobem juntos na porta `3000`. Acesse: [http://localhost:3000](http://localhost:3000)
-
-### Abrir no Chrome automaticamente
+### Comandos Docker Úteis
 
 ```bash
-pnpm chrome
-```
+# Ver logs
+docker logs pixelobra-app --follow --tail 20
+docker logs pixelobra-wpp --follow --tail 20
 
-### Banco de dados
+# Rebuild app (após mudanças no código)
+docker compose build app && docker rm -f pixelobra-app && docker compose up app -d
 
-```bash
-# Gerar e aplicar migrações
-pnpm db:push
-```
+# Rebuild wpp (após mudanças no server.js)
+docker compose build wpp --no-cache && docker rm -f pixelobra-wpp && docker compose up wpp -d
 
-### Produção
+# Reset sessão WhatsApp (novo QR code)
+docker rm -f pixelobra-wpp && docker volume rm pixelobraweb_wpp-auth && docker compose up wpp -d
 
-```bash
-# Build completo (Vite + esbuild)
-pnpm build
-
-# Iniciar servidor de produção
-pnpm start:prod
+# Status WhatsApp
+curl http://localhost:3010/status
 ```
 
 ---
