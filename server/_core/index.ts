@@ -285,65 +285,59 @@ app.post("/api/jarvis/meeting", async (req, res) => {
   }
 });
 
-// Setup Vite or Static files depending on env
-(async () => {
-  let server: ReturnType<typeof app.listen>;
+export default app;
 
-  if (process.env.NODE_ENV === "development") {
-    // We need to pass the http server instance to vite for HMR
-    // However, app.listen returns the server.
-    // setupVite expects (app, server).
-    // So we need to create the server first or structure it so we can pass it.
-    // Looking at common patterns:
+if (!process.env.VERCEL) {
+  // Setup Vite or Static files depending on env
+  (async () => {
+    let server: ReturnType<typeof app.listen>;
 
-    // Actually, looking at vite.ts: setupVite(app, server)
-    // We need a raw http server to attach WebSocket for HMR if using middleware mode.
-
-    // Let's create the http server manually
-    server = app.listen(port, () => {
-      console.log(`[Server] Listening on http://localhost:${port}`);
-    });
-
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-    server = app.listen(port, () => {
-      console.log(`[Server] Listening on http://localhost:${port}`);
-    });
-  }
-
-  // ─────────────────────────────────────────────
-  // Start Background Monitors
-  // ─────────────────────────────────────────────
-  startTokenMonitor();
-  startCreditsMonitor();
-  startEmailMonitor();
-  startFollowUpMonitor();
-  startInstagramEngagement();
-
-  // Graceful shutdown
-  const shutdown = () => {
-    console.log("[Server] Shutting down...");
-    if (server) {
-      server.close(() => {
-        console.log("[Server] Closed successfully");
-        process.exit(0);
+    if (process.env.NODE_ENV === "development") {
+      server = app.listen(port, () => {
+        console.log(`[Server] Listening on http://localhost:${port}`);
       });
+
+      await setupVite(app, server);
     } else {
-      process.exit(0);
+      serveStatic(app);
+      server = app.listen(port, () => {
+        console.log(`[Server] Listening on http://localhost:${port}`);
+      });
     }
-  };
 
-  process.on("SIGTERM", shutdown);
-  process.on("SIGINT", shutdown);
+    // ─────────────────────────────────────────────
+    // Start Background Monitors
+    // ─────────────────────────────────────────────
+    startTokenMonitor();
+    startCreditsMonitor();
+    startEmailMonitor();
+    startFollowUpMonitor();
+    startInstagramEngagement();
 
-  // Global Error Handlers (prevent silent crashes)
-  process.on("uncaughtException", (err) => {
-    console.error("[Server] Uncaught Exception:", err);
-    // Optional: Restart gracefully or just log. keeping it alive might be risky but prevents immediate exit.
-  });
+    // Graceful shutdown
+    const shutdown = () => {
+      console.log("[Server] Shutting down...");
+      if (server) {
+        server.close(() => {
+          console.log("[Server] Closed successfully");
+          process.exit(0);
+        });
+      } else {
+        process.exit(0);
+      }
+    };
 
-  process.on("unhandledRejection", (reason, promise) => {
-    console.error("[Server] Unhandled Rejection at:", promise, "reason:", reason);
-  });
-})();
+    process.on("SIGTERM", shutdown);
+    process.on("SIGINT", shutdown);
+
+    // Global Error Handlers (prevent silent crashes)
+    process.on("uncaughtException", (err) => {
+      console.error("[Server] Uncaught Exception:", err);
+      // Optional: Restart gracefully or just log. keeping it alive might be risky but prevents immediate exit.
+    });
+
+    process.on("unhandledRejection", (reason, promise) => {
+      console.error("[Server] Unhandled Rejection at:", promise, "reason:", reason);
+    });
+  })();
+}

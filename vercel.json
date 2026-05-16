@@ -1,6 +1,10 @@
 {
   "rewrites": [
     {
+      "source": "/api/(trpc|webhooks|whatsapp|jarvis)(/.*)?",
+      "destination": "/api/index.ts"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
